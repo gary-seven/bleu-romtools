@@ -1,0 +1,34 @@
+ZCC/ASZ80 additional information
+Scott Lawrence
+yorgle@gmail.com
+
+
+Additional keyword...
+
+
+.bound ADDRESS
+
+	define a top boundary for a chunk of code.  If the assembler
+	puts a byte on the address defined, a warning will be generated.
+	This is helpful when making rom patches, when you have a very 
+	limited, specific romspace to fit your code into.
+
+	example:
+
+
+.org	0x4300
+foo:
+	ld a, ix
+	inc a
+	jp bar
+.bound	0x4380
+
+.org	0x4400
+bar:
+	inc a
+	add b
+	ld (hl), a
+	ret
+.bound	0x4420
+
+
