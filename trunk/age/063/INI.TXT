@@ -1,0 +1,226 @@
+; sample commented age.ini file 
+
+; unless noted, all blah_0000 items start at 0, and increment 
+; sequencially.  If there is a gap, ie 0, 1, 2, 4, 5 then 0-2 will 
+; be loaded, and 4&5 ignored.  All numbers in the 00, 000 or 0000 fields
+; are decimal (base 10), not hex (base 16)
+;
+; all items with multiple fields should have the fields seperated
+; by white space (tab, space)
+;
+; all external files should have the following sections:
+;[System]
+;    version
+;    info
+;    author
+;[Drivers]
+;    driver_0000
+;    ...
+    
+
+[System]
+version_major = 0
+version_minor = 5
+; major and minor .ini version.  should corrolate with the current
+; version of age.  (age should be higher)
+
+info = This is an ini example file
+author = Scott "Jerry" Lawrence
+
+
+
+[User]
+; user data
+default_driver = pacman		; which driver to start the cursor on
+PCX_Increment = 8		; default skip resolution for pcx loader
+Maped_Stretch = 1		; should maped stretch the display?
+
+
+
+[Drivers]
+; these must be sequencial starting at 0000
+driver_0000 = pacman_001
+; that states that in the "pacman_001" section in THIS ini file, there is a 
+; driver.  the name "pacman_001" has no significance, other than that it
+; must be unique 
+
+driver_0001 = add_on.ini
+; this one states that in the file add_on.ini, there is a section called
+; "Drivers", and it contains more drivers listed as with this section
+
+
+
+[pacman_001]
+; GAMEINFO analog.
+gamename = Pac Man (Namco)
+; the name to display and sort on.
+
+basename = namcopac
+; the base game name - roms are in this directory 
+
+drom_000  = namcopac.5e
+; name of rom 000 - these must be sequencial, starting at 000
+
+size_000 = 0x1000
+; how big the rom is.  (roms are stored in memory sequencially)
+
+drom_001  = namcopac.5f
+size_001 = 0x1000
+
+gfx_bank = pacman_gfx_banks
+; where are the graphics bank in this file?  which section
+
+palettes = pacman_palettes
+; palettes for the set..
+
+romdata = pacman_romdata
+; where the rom data is -- if there is none, then this item does not exist
+
+
+
+[pacman_char_layout]
+; GFXLAYOUT analog
+width = 8
+height = 8
+total = 256
+planes = 2
+plane_offset = 0 4
+xoffset_00 = 56 48 40 32 24 16 8 0
+yoffset_00 = 64 65 66 67
+yoffset_01 =  0  1  2  3
+; these can continue in the next item if necessary...
+charinc = 128
+
+
+
+[pacman_sprite_layout]
+; same as above
+width = 16
+height = 16
+total = 64
+planes = 2
+plane_offset = 0 4
+xoffset_00 = 312  304  296  288  280  272 .....
+yoffset_00 =  ....  you get the idea...
+charinc = 512
+
+
+
+[pacman_gfx_banks]
+bank_000 = pacman_char_layout
+; use the layout "pacman_char_layout" for bank 0
+
+data_000 = 0x0000
+; bank 0 starts in rom location 0x0000
+
+bank_001 = pacman_sprite_layout
+data_001 = 0x1000
+
+
+
+[pacman_colors]
+color_00 = 0  0  0
+; color listings are 0..63, red, green, blue
+color_01 = 63 63 63
+color_02 = 50 50 50
+color_03 = 40 40 40
+color_04 = 30 30 30
+color_05 = 20 20 20
+
+
+
+[pacman_palettes]
+colors = pacman_colors
+palette_00 = 1 2 3 0
+palette_01 = 5 3 2 0
+palette_02 = 0 3 5 2
+
+
+
+; now the additional information... 
+[pacman_romdata]
+drom_000 = namcopac.6e
+drom_001 = namcopac.6f
+drom_002 = namcopac.6h
+drom_003 = namcopac.6j
+; rom datas
+
+size_000 = 0x1000
+size_001 = 0x1000
+size_002 = 0x1000
+size_003 = 0x1000
+; rom sizes
+
+map_000 = pacman_map
+; map information - if none, do not include the map_000 line.
+
+text_000 = ghost_0
+; first text category (must be 000, all others are consecutive...)
+
+text_001 = screen_0
+
+
+
+[pacman_map]
+driver = pacman
+; map driver name
+
+start = 0x3436
+; start pos of map data
+
+overlay = 0x35b5
+; start pos of overlay data
+
+width = 28
+; width of map in characters
+
+height = 32
+; height of map in characters
+
+bank = 0
+; which bank's characters to display
+
+
+
+[ghost_0]
+name = Ghost Names
+; name of the category
+
+lookup = pacman_lookup
+; which lookup table to use
+
+text_000 = Red Name
+; what to display for the name
+
+spos_000 = 0x3d59
+; location in data roms
+
+leng_000 = 10
+; length of string (max 23)
+
+text_000 = Red Nick
+spos_000 = 0x3d69
+leng_000 = 9
+
+
+
+[screen_0]
+name = Screen Text
+lookup = pacman_lookup
+text_000 = High Score
+spos_000 = 0x3715
+leng_000 = 10
+
+
+
+[pacman_lookup]
+insert = 0x40
+; what character to insert when the user hits "insert"
+
+char_032 = 0x40
+char_033 = 0x41
+; one for each typeable character.  
+; the format is: char_nnn, where "nnn" is the ascii value 0..255, and the
+; value of that item is the replacement character
+; if a value of 0xffff is used, the character will be ignored.
+
