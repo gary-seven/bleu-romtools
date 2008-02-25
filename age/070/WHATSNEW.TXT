@@ -1,0 +1,155 @@
+A.G.E. (Arcade Games editor) v0.6
+================================= 
+
+Change History
+--------------
+*** 0.7 Released 20Sep98
+   Reorganised all code so that drivers are now INI files
+   Now 223 INI file drivers
+   Allow palettes to be changed and new ones to be added 
+   Added ROMPath to AGE.INI - roms can now be kept anywhere
+
+0.6.3 5Apr98 IJM
+   Added last loaded game to INI file so that the load selector automatically
+   starts from that position
+
+0.6.2 30Mar98 Jerry
+	Added Tool: rotate +/- 45 degrees
+
+0.6.1 27Mar98 IJM
+Added the following command line options:
+[short game name] e.g. age mspacman   This allows you to bypass the load dialog
+-makepatch   creates patch files for any rom images that you have changed
+-patch       merges any patch files for the specified game
+-patchq      as -patch but quiet (no warnings)
+Added quick help (F1) to the following areas: Character Editing, Character
+Selecting, Colour Selecting, Scratch Pad, Map Editing and Text Editing.
+
+*** 0.6 Released 17Mar98 ***
+
+ 0.5.3 16Feb98 Jerry 
+	re-enabled the timer
+	cursor for texted blinks now
+	Added the mouse diagonal kludge
+	pengo has proper colors
+	pengoa has text strings
+	Added [F9] save graphics bank to .pcx file
+	Added [F10] to load in a graphic set (.pcx)
+	INI file for configurations
+	added end_credits();
+	mspacman map editor!
+
+ 0.5.2 28Jan98 Jerry
+	Added -help command line option
+	Added -list to display supported sets a la MAME
+	Added -listfull to display sets & names
+	Added the romsetname to the file loader
+	Status line displays romset name
+	Added texted.[ch] - full text capability
+	Texted support for: pacman, pacmod, pacplus
+	Added more sprite layouts to the pacman driver
+	Changed DisplayFont to display fonts <255 chars ok.
+	Added drivers for: pacmanbl, galaga, galaganm,
+	galagabl, gallag, galmidw, galnamco, superg, galapx
+	galap1, galap4, galturbo, redufo, JRPacMan,
+	digdugat, digdugnm
+	Also added: japirem & uniwars, which are broken
+	Maped has a scale feature 's' to scale map to screen
+	Squashed SortGames()/Create_Bitmap() bug (malloc)
+	- this bug existed since 0.3.3 at least (Nov 10)!!!
+	Added snapshot to main screen inputs (F12)
+
+ 0.5.1 23Dec97 Jerry
+	Added a check for windows version in setup_timers()
+	Added -version command line option
+	ReOrganized the map editing functions.
+
+ *** 0.5 Released 23Dec97 ***
+
+ 0.4.6 23Dec97 Ivan
+	Added more drivers
+
+ 0.4.5 15Dec97 Jerry
+	fixed some minor map editor issues.
+	saving past end of map space in the roms
+	map editing functionality is closer to Age proper.
+
+ 0.4.4 14Dec97 Ivan
+	Added Zoom Support using - + keys
+
+ 0.4.3 07Dec97 Ivan
+	Added Support for 32x32 editing
+
+ 0.4.2 01Dec97 Jerry
+	Added a timer function for cursor blink
+	map editor works with no problems
+	map editor saves flawlessly (map,pellots)
+	map editor 'g' to get tile
+	map editor displays mode
+	roms buffers are dynamic now (fileio re-arranged)
+
+ 0.4.1 28Nov97 Jerry
+	Added Gottleib Driver (Reactor, Qberts, Mad Planets,
+	 Krull, Three Stooges)
+	Added Map/Rom features to the driver structures
+	Map editor 'm' displays the map properly in
+	 all pacman variants (not msPac)
+
+ *** 0.4 Released 19Nov97 ***
+
+ 0.3.6 18Nov97 Jerry
+	Added wrap-slide tool (tools.[ch])
+	Added key shortcuts for slide & wrap-slide (age.c)
+	Added display of character/sprite number
+	Added display of color number
+
+ 0.3.5 18Nov97 IJM
+	Added < and > keys to change between palettes
+	Merged in Chris's palette structure
+	Added -listroms command line option
+	Added Donkey Kong and Junior drivers
+	Load dialog displayed on startup
+
+ 0.3.4.9 17Nov97 Jerry
+	Added manipulations: vert/horiz flip, rotate
+	 slide up/down/left/right, flood fill,
+	 swap characters, eyedropper, paint
+	Changed FG & BG clear (k,K)
+	Added allegro_init() to age.c
+	Added the lookup_list stuff to util.[ch]
+	changed manips.[ch] -> tools.[ch]
+
+ 0.3.4.5 14Nov97 Jerry
+	Added the "Just saved" dialog box when saving
+	changed a little in manips.c (comments & defines)
+	Added drivers for: MsPacAtk, Piranha, PuckMan,
+ 	 Hangly, PacPlus, PacMod, NamcoPac, PacManJP,
+	 Pengoa, Penta
+
+ 0.3.4  12Nov97 IJM - Add support for 16 colour palette + selecting fore and
+                      background colours
+                    - Partial scratch support re-added
+                    - Drivers for Mappy, DigDug2, Motos, Druaga	
+                Chris - Fixed boblbobl driver
+                Jerry - Added Tron (MCR2 driver) (16 colors)
+                        Added the "Are you sure" dialog box when quitting
+
+ 0.3.3  10Nov97 IJM - Added support for viewing and editing 16x16 sprites
+                      Moved Clear bitmap to manipulations dialog.
+                      Moved Drivers and roms to subdirectory to match MAME
+                      Changed Select Colour (S) to Colour (C)
+
+ 0.3.2  06Nov97 Jerry - Fixed a lot of L/R mouse button things
+                        protos for bitmap manipulations
+                        cleaned up vidlib to be a seperate library
+
+ 0.3.1  01Nov97 Chris - Added support for BubbleBobble, 1942, BombJack
+
+ 0.3 26Oct97 IJM - Added mouse support and Frogger, Scramble, RallyX
+
+ 0.2.5  24Oct97 Jerry - Added support for Pacman, MsPacman, Pengo, Crush
+ 
+ 0.2 15Oct97 IJM - Added scratch pad and vanguard driver.
+
+ 0.1 13Oct97 IJM - Initial Version
+
