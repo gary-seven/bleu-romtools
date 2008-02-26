@@ -34,3 +34,4 @@ of two versions of the software.
   * 0.7 is slightly updated and has external driver "INI" files, making it more easily expandable.
 
 *Note* The above shows graphical imagery that might be copyrighted by Namco, Midway or other companies, and is used above for illustrative purposes only.
+
