@@ -1,4 +1,4 @@
-#The original MS-DOS version of the app
+# The original MS-DOS version of the app
 
 = Introduction =
 
