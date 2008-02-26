@@ -22,7 +22,7 @@ will look within the target game.
 
 = Heritage =
 
-Turaco Classic was preceded by [AGE], and followed by [TuracoCL]
+Turaco Classic was preceded by [AGE], and followed by [TuracoCL].
 
 = Downloads =
 
