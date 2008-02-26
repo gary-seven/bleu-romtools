@@ -1,0 +1,26 @@
+#Command line version of Turaco
+
+
+= Introduction =
+
+Turaco CL is the command line version of the Turaco/Age series of tools.
+
+It converts from ROM data files to PCX image files and back again.  It
+is intended that you edit the PCX files in your favorite graphics
+editing tool.
+
+More information is available [http://umlautllama.com/projects/turacocl/ at the main site].
+
+
+= Heritage =
+
+Turaco CL was preceded by [TuracoClassic].
+
+= Downloads =
+
+Since TuracoCL is currently supported and maintained, you can
+download the source from the "Source" tab above.  Any issues, bugs,
+or suggestions can be logged via the "Issues" tab above.
+
+There is also a [http://groups.yahoo.com/group/Turaco/ Yahoo group]
+dedicated to this project as well.
