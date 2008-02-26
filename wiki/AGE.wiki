@@ -12,7 +12,10 @@ AGE had the ability to edit Pac game maps as well.
 
 http://bleu-romtools.googlecode.com/svn/wiki/age_maped.gif
 
-It was followed by [TuracoClassic]
+
+= Heritage =
+
+AGE was followed by [TuracoClassic].
 
 = Downloads =
 
