@@ -1,13 +1,29 @@
-#summary One-sentence summary of this page.
+#The original MS-DOS version of the app
 
 = Introduction =
 
-Add your content here.
+Turaco was a GUI-based editor for graphics ROMs from old arcde machines
+with sprite-based hardware such as Pengo, Pac-Man, Rush'n Attack, and such.
 
+http://trco_filesel.gif
 
-= Details =
+It had the ability to load and save ROMs.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+http://trco.gif
+
+It also allowed for mouse-based editing of the rom.  You could select a 
+sprite in the ROM, edit it, and use various graphics manipulations.
+
+http://trco_anim.gif
+
+It also had the facilities to show you how an animation sequence 
+will look within the target game.
+
+= Downloads =
+
+Turaco Classic is no longer supported or maintained, but the 
+downloads tab above will bring you to a few MS-DOS downloads 
+of two versions of the software.
+
+  * 0.6.3 is a good version of the app that supports Pac-Man (and related games) map editing along with sprite editing
+  * 0.7 is slightly updated and has external driver "INI" files, making it more easily expandable.
