@@ -1,5 +1,6 @@
 #The original MS-DOS version of the app
 
+
 = Introduction =
 
 Turaco was a GUI-based editor for graphics ROMs from old arcde machines
@@ -27,3 +28,5 @@ of two versions of the software.
 
   * 0.6.3 is a good version of the app that supports Pac-Man (and related games) map editing along with sprite editing
   * 0.7 is slightly updated and has external driver "INI" files, making it more easily expandable.
+
+*Note* The above shows graphical imagery that might be copyrighted by Namco, Midway or other companies, and is used above for illustrative purposes only.
