@@ -20,13 +20,17 @@ http://bleu-romtools.googlecode.com/svn/wiki/trco_anim.gif
 It also had the facilities to show you how an animation sequence 
 will look within the target game.
 
+= Heritage =
+
+Turaco Classic was preceded by [AGE], and followed by [TuracoCL]
+
 = Downloads =
 
 Turaco Classic is no longer supported or maintained, but the 
 downloads tab above will bring you to a few MS-DOS downloads 
 of two versions of the software.
 
-  * 0.6.3 is a good version of the app that supports Pac-Man (and related games) map editing along with sprite editing
+  * 0.6.3 is a working version of the application, and the last one made with integrated drivers. (no external driver files necessary)
   * 0.7 is slightly updated and has external driver "INI" files, making it more easily expandable.
 
 *Note* The above shows graphical imagery that might be copyrighted by Namco, Midway or other companies, and is used above for illustrative purposes only.
