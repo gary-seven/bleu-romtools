@@ -1,0 +1,23 @@
+#Arcade Graphics Editor
+
+
+= Introduction =
+
+AGE (arcade games/graphics editor) was created by Ivan Macintosh and 
+Scott Lawrence to edit graphics roms.  It had a keyboard-driven interface.
+
+http://bleu-romtools.googlecode.com/svn/wiki/age_063.gif
+
+AGE had the ability to edit Pac game maps as well.
+
+http://bleu-romtools.googlecode.com/svn/wiki/age_maped.gif
+
+It was followed by [TuracoClassic]
+
+= Downloads =
+
+AGE is no longer supported or maintained, but the 
+downloads tab above will bring you to a few MS-DOS downloads 
+of two versions of the software.
+
+*Note* The above shows graphical imagery that might be copyrighted by Namco, Midway or other companies, and is used above for illustrative purposes only.
