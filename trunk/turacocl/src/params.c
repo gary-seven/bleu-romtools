@@ -51,6 +51,9 @@ _params_NewUP( void )
 	/* env vars */
 	pup->tdrivers = pup->troms = NULL;
 
+	/* misc */
+	pup->gui = 0;
+
 	/* debug stuff */
 	pup->dmp = 0;
     }
@@ -106,6 +109,10 @@ params_ParseArgv( UserParams * pup, int argc, char ** argv )
 	    else if (!strcmp( argv[ac], "-dbf" ))  pup->dbf = argv[++ac];
 	    else if (!strcmp( argv[ac], "-chk" ))  pup->chk = argv[++ac];
 	    else if (!strcmp( argv[ac], "-wid" ))  pup->wid = atoi(argv[++ac]);
+
+#ifdef USE_CURSES
+	    else if (!strcmp( argv[ac], "-gui" ))  pup->gui = 1;
+#endif
 	}
     }
 
@@ -218,3 +225,44 @@ params_Verify( UserParams * pup )
 
     return( ERR_NONE );
 }
+
+
+
+/* params_Usage
+ *
+ * dumps out the parameter usages to the passed in file
+ */
+void params_Usage( FILE * fp )
+{
+    fprintf( fp, "%s",
+	    "    == COMMON ==\n"
+	    "\t-drv DriverName          Select the driver to use\n"
+	    "\t-ini AbsoluteDriverPath  Use this specific driver\n"
+	    "\t-inf (IMG|ROM)           Select the input format\n" 
+	    "\t-bnk BankNumber          Which bank to use\n"
+	    "\t-pal PaletteNumber       Which palette to use\n" 
+		);
+    fprintf( fp, "%s",
+	    "\t-key KeyFileName         The palette key filename\n"
+	    "\t-rom InputDirectory      Absolute ROM input directory\n"
+	    "\t-ff  (PPM|PCX)           Image format to use (PCX is default)\n"
+	    "\t-tms TilemapSetName	Import/Export tilemaps along with banks\n"
+	    "\t-dmp			Dump out the driver structure\n"
+	    "\n" );
+    fprintf( fp, "%s",
+	    "    == IMG to ROM ==   (-inf IMG)\n"
+	    "\t-rod OutputDirectory     Absolute ROM output directory\n"
+	    "\n" );
+    fprintf( fp, "%s",
+	    "    == ROM to IMG ==   (-inf ROM)\n"
+	    "\t-dbf BankImageFile       Force this filename for the bank image\n"
+	    "\t-chk CheckerboardFile    Force this filename for the checkerboard\n"
+	    "\t-wid NumberSpritesWide   How many sprites across\n"
+	    "\n" );
+#ifdef USE_CURSES
+    fprintf( fp, "%s",
+	    "    == MISC ==\n"
+	    "\t-gui                     Enable Curses-GUI Mode\n"
+	    "\n" );
+#endif
+	}

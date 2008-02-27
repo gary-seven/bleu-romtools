@@ -45,7 +45,7 @@ char * jstr_ZotLeadTrailSpace( char * buf, int max )
     if (!buf) return( buf );
     if (len > max) return( buf );
     
-    // first walk from the end of the string back to the first non-zero
+    /* first walk from the end of the string back to the first non-zero */
     for ( (x = len-1) ;
 	  (x > 0) && 
 		(isspace((int)buf[x]) ||
@@ -56,7 +56,7 @@ char * jstr_ZotLeadTrailSpace( char * buf, int max )
 	buf[x] = '\0';
     }
 
-    // now start at 0, and zot the leading space
+    /* now start at 0, and zot the leading space */
     for ( (x=0) ;
 	  (x < max) && 
 		( isspace((int)buf[x])  ||

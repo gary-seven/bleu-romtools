@@ -36,7 +36,7 @@ int gui_popup_requestor( gui_handle * gui, char * info, char ** items,
 	int done = 0;
 	int ret = -1;
 	int ci = 0;
-	int p;
+	int p, c;
 	int nitems;
 	int cols, rows;
 	int startx, starty;
@@ -73,6 +73,7 @@ int gui_popup_requestor( gui_handle * gui, char * info, char ** items,
 		gui_colorborder( req, COLOR_BORDER_SELECTED );
 
 		/* draw the items, highlighting the one with focus */
+
 		for( p=0 ; p<nitems ; p++ )
 		{
 			/* unselected, unless selected. */
@@ -80,17 +81,24 @@ int gui_popup_requestor( gui_handle * gui, char * info, char ** items,
 			if( ci == p ) 
 				wattron( req, COLOR_PAIR(COLOR_SELECTED) );
 
+			/* backfill the line */
+			for( c=2 ; c<cols-2 ; c++ )
+			{
+				mvwaddch( req, 3+p, c, ' ' );
+			}
+
 			/* print out the text, centered */
 			wprcent( req, 3+p, items[p] );
+
+			/* position display */
+			mvwaddch( req, 3+p,      1, (ci==p)?ACS_LARROW:' ' );
+			mvwaddch( req, 3+p, cols-2, (ci==p)?ACS_RARROW:' ' );
 
 			/* unselected, unless selected. */
 			if( ci == p ) 
 				wattroff( req, COLOR_PAIR(COLOR_SELECTED) );
 			wattroff( req, COLOR_PAIR(COLOR_UNSELECTED) );
 
-			/* position display */
-			mvwaddch( req, 3+p,      1, (ci==p)?ACS_LARROW:' ' );
-			mvwaddch( req, 3+p, cols-2, (ci==p)?ACS_RARROW:' ' );
 		}
 
 		/* refresh it to the screen */

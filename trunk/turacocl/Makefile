@@ -11,7 +11,7 @@ DIRNAME := turacoCL
 
 VERSION := 0.8
 VERSTAR := 08
-VDATE   := "2003.05.30"
+VDATE   := "2008.02.26"
 
 
 ##########################################################
@@ -20,16 +20,27 @@ VDATE   := "2003.05.30"
 # it out, and use the MSDOS line for MS-DOS
 
 ARCH := $(shell uname -s)
+ARCH ?= NetBSD
 
 #ARCH := MSDOS
 
 ##########################################################
 # dos-switching stuff...  (automagic!)
 
+CURSES := YES
+
 ifeq ($(ARCH),MSDOS)
 TARGET  := $(NAME).exe
 else
 TARGET  := $(NAME)
+endif
+
+ifeq ($(ARCH),NetBSD)
+DNCURSES := -DUSE_CURSES
+LIBS += -lcurses
+else
+DNCURSES := -DUSE_CURSES -DNCURSES
+LIBS += -lncurses
 endif
 
 ##########################################################
@@ -57,6 +68,16 @@ SRCS := \
 	src/params.c \
 	src/main.c
 
+ifeq ($(CURSES),YES)
+SRCS := $(SRCS) \
+	src/gui/bits.c \
+	src/gui/filereq.c \
+	src/gui/menu.c \
+	src/gui/popup.c \
+	src/gui/status.c \
+	src/gui/tmgui.c 
+endif
+
 SAMPLES := 
 
 OBJS := $(SRCS:%.c=%.o)
@@ -68,13 +89,18 @@ all:	$(TARGET)
 
 
 tidy:
-	rm -f core
-	rm -f $(OBJS)
+	@echo Removing core files
+	@rm -f $(TARGET).core core
+	@echo Removing generated object files
+	@rm -f $(OBJS)
 
 clean:	tidy
-	rm -f $(TARGET) *pnm *pcx pacman.5*
-	rm -f .gdb_history
-	rm -f .DS_Store
+	@echo Removing built executable $(TARGET)
+	@rm -f $(TARGET)
+	@echo Removing ancillary files
+	@rm -f $(TARGET) *pnm *pcx pacman.5*
+	@rm -f .gdb_history
+	@rm -f .DS_Store
 
 backup: clean
 	cd .. ;\
@@ -165,8 +191,9 @@ CC  := gcc
 CXX := gcc
 
 
-COMMONFLAGS := -O -Wall -g \
+COMMONFLAGS := -O -Wall -pedantic -g \
 	-D$(ARCH) \
+	$(DNCURSES) \
 	-DJ_APPNAME=\"$(TARGET)\" \
 	-DJ_VERSION=\"$(VERSION)\" \
 	-DJ_DATE=\"$(VDATE)\"\
@@ -176,7 +203,8 @@ COMMONFLAGS := -O -Wall -g \
 	-Isrc/gfxlib/lsio \
 	-Isrc/turaco \
 	-Isrc/ini \
-	-Isrc/game
+	-Isrc/game \
+	-Isrc/gui
 
 CXXFLAGS := $(COMMONFLAGS) -mt -instances=static 
 
@@ -189,10 +217,16 @@ LDFLAGS := -g
 NLIBS := 
 
 ##########################################################
-# link!
+# build
+.c.o:
+	@echo Build $<
+	@$(CC) $(CFLAGS) -o $@ -c $<
 
+##########################################################
+# link!
 $(TARGET):	$(OBJS)
-	$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
+	@echo Link $@
+	@$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 
 ##########################################################
 
@@ -211,6 +245,7 @@ $(TARGET):	$(OBJS)
 ##########################################################
 
 main.o:	
+
 
 ##########################################################
 # $Id: Makefile,v 1.31 2003/05/31 03:40:20 jerry Exp $

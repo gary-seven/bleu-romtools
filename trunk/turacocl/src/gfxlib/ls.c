@@ -94,15 +94,18 @@ LS_Save(
     {
 	case( ff_PPM ):
 	case( ff_PPM_BINARY ):
-	    return( PPM_Save( filename, toSave, SAVE_BINARY ));
+	    (void)( PPM_Save( filename, toSave, SAVE_BINARY ));
+	    return;
 	    break;
 
 	case( ff_PPM_ASCII ):
-	    return( PPM_Save( filename, toSave, SAVE_ASCII ));
+	    (void)( PPM_Save( filename, toSave, SAVE_ASCII ));
+	    return;
 	    break;
 
 	case( ff_PCX ):
-	    return( PCX_Save( filename, toSave, palette ));
+	    (void)( PCX_Save( filename, toSave, palette ));
+	    return;
 	    break;
 
 	case( ff_UNKNOWN ):

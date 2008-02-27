@@ -219,55 +219,55 @@ ini_ParseFile( char * filename )
 
     while (__fpeek(ifp) != EOF)
     {
-	// clear the buffer
+	/* clear the buffer*/
 	memset( buf, '\0', BUFSIZE );
-	// read in a line
+	/* read in a line*/
 	(void) fgets( buf, BUFSIZE, ifp );
 
-	// check for a # sign in it, set it to a NULL
+	/* check for a # sign in it, set it to a NULL*/
 	(void) jstr_NullFirstC( buf, BUFSIZE, '#' );
 
-	// zot leading and trailing space
+	/* zot leading and trailing space*/
 	(void) jstr_ZotLeadTrailSpace( buf, BUFSIZE );
 
-	// skip if there's nothing left
+	/* skip if there's nothing left*/
 	if (0 == strlen( buf )) continue;
 
-	// check for square brackets.  if so, 
+	/* check for square brackets.  if so, */
 	if ( buf[0] == '[' && buf[strlen(buf)-1] == ']' )
 	{
-	    //   set first and last character to ' '
+	    /*   set first and last character to ' ' */
 	    buf[0] = buf[strlen(buf)-1] = ' ';
 
-	    //   zot leading and trailing space
+	    /*   zot leading and trailing space */
 	    (void) jstr_ZotLeadTrailSpace( buf, BUFSIZE );
 
-	    //   that is the header
+	    /*   that is the header */
 	    if (header)  free( header );
 	    header = strdup( buf );
 	} else {
-	    // find '='
+	    /* find '=' */
 	    x = jstr_FindC( buf, BUFSIZE, '=', 0 );
 
-	    // if not found, go to the next line
+	    /* if not found, go to the next line */
 	    if (x == -1) continue;
 
 	    key = value = NULL;
 
-	    //   char * value = buf[that address+1]
+	    /*   char * value = buf[that address+1] */
 	    value = buf+x+1;
 
-	    //   set buf[that address] = '\0'
+	    /*   set buf[that address] = '\0' */
 	    buf[x] = '\0';
 	    
-	    //   char * key = buf[0]
+	    /*   char * key = buf[0] */
 	    key = buf;
 
-	    //   zot leading and trailing space (buf) (value)
+	    /*   zot leading and trailing space (buf) (value) */
 	    (void) jstr_ZotLeadTrailSpace( key, BUFSIZE );
 	    (void) jstr_ZotLeadTrailSpace( value, BUFSIZE );
 
-	    //   CB key-value 
+	    /*   CB key-value */
 	    i = ini_AddEntry( i, header, key, value );
 	}
 

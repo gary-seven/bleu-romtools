@@ -284,7 +284,7 @@ romio_SaveROMs( TuracoInstance * ti, int format )
 			ti->gd->romFileDescs[c].size, 
 			1, outfile);
 		} else {
-		    // IHX http://www.8052.com/tutintel.phtml	
+		    /* IHX http://www.8052.com/tutintel.phtml	 */
 		    printf("Selected format is unsupported.\n" );
 		    exit( -1002 );
 		}

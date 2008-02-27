@@ -7,29 +7,8 @@
 #ifndef __PARAMS_H__
 #define __PARAMS_H__
 
+#include <stdio.h>	/* for FILE */
 #include "gfxlib.h"	/* for "FileFormat" */
-
-#define PARAMSUSAGE \
-    "    == COMMON ==\n" \
-    "\t-drv DriverName          Select the driver to use\n" \
-    "\t-ini AbsoluteDriverPath  Use this specific driver\n" \
-    "\t-inf (IMG|ROM)           Select the input format\n"  \
-    "\t-bnk BankNumber          Which bank to use\n" \
-    "\t-pal PaletteNumber       Which palette to use\n" \
-    "\t-key KeyFileName         The palette key filename\n" \
-    "\t-rom InputDirectory      Absolute ROM input directory\n" \
-    "\t-ff  (PPM|PCX)           Image format to use (PCX is default)\n" \
-    "\t-tms TilemapSetName	Import/Export tilemaps along with banks\n" \
-    "\t-dmp			Dump out the driver structure\n" \
-    "\n" \
-    "    == IMG to ROM ==   (-inf IMG)\n"\
-    "\t-rod OutputDirectory     Absolute ROM output directory\n" \
-    "\n" \
-    "    == ROM to IMG ==   (-inf ROM)\n"\
-    "\t-dbf BankImageFile       Force this filename for the bank image\n" \
-    "\t-chk CheckerboardFile    Force this filename for the checkerboard\n" \
-    "\t-wid NumberSpritesWide   How many sprites across\n" \
-    "\n"
 
 
 typedef struct {
@@ -66,6 +45,9 @@ typedef struct {
     char * tdrivers;  /* TDRIVERS environment variable */
     char * troms;     /* TROMS    environment variable */
 
+    /* misc */
+    int gui;	/* enable GUI mode? */
+
     /* debug stuff */
     int dmp;	/* dump out the driver */
 } UserParams;
@@ -93,6 +75,13 @@ params_Parse( UserParams * pup, int argc, char **argv );
  */
 int params_Verify( UserParams * pup );
 
+
+
+/* params_Usage
+ *
+ * dumps out the parameter usages to the passed in file
+ */
+void params_Usage( FILE * fp );
 
 #endif
 

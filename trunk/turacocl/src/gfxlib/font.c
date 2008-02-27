@@ -343,7 +343,7 @@ font_RenderChar(
     /* draw the character */
     for (row = 0 ; row < font->height ; row ++)
     {
-	//foffset = (c * font->width) + row;
+	/*foffset = (c * font->width) + row; */
 	foffset = (c * 8) + row;
 	for (pix = 0 ; pix < font->width && pix < 8 ; pix++) 
 	{

@@ -35,7 +35,7 @@ void usage( char ** argv )
     version();
     fprintf( stderr, "Usage: \t%s [options]\n\n" , argv[0] );
     fprintf( stderr, "Options:\n" );
-    fprintf( stderr, "%s\n", PARAMSUSAGE );
+    params_Usage( stderr );
 }
 
 

@@ -4,7 +4,7 @@
 #
 
 
-NAME    := gui
+NAME    := testapp
 DIRNAME := gui
 
 # version number gets bumped when:
@@ -46,7 +46,7 @@ LIBS += -lcurses
 ##########################################################
 # source files
 
-SRCS := main.c   \
+SRCS := test.c   \
 	bits.c   \
 	popup.c  \
 	menu.c   \
@@ -103,7 +103,7 @@ floppy2:
 # test targets
 
 test: all
-	./gui
+	./$(NAME)
 
 
 ##########################################################
