@@ -9,8 +9,7 @@
 NAME    := turacocl
 DIRNAME := turacoCL
 
-VERSION := 0.8
-VERSTAR := 08
+VERSION := 009
 VDATE   := "2008.02.26"
 
 
@@ -110,8 +109,7 @@ backup: clean
 ##########################################################
 # stuff for making binary distributions
 
-UNIXDISTNAME := t_CL_$(VERSION)
-DOSDISTNAME  := t_CL_$(VERSTAR)
+DISTNAME := t_CL_$(VERSION)
 
 DISTFILES := $(TARGET) README.txt LICENSE.txt inidriv.txt bugs.txt
 
@@ -120,7 +118,7 @@ dosbindist: $(TARGET)
 	cp txt/bugs.txt .
 	cp txt/inidriv.txt .
 	cp txt/README.txt .
-	pkzip $(DOSDISTNAME).zip $(DISTFILES)
+	pkzip $(DISTNAME).zip $(DISTFILES)
 	rm -f README.txt .
 	rm -f inidriv.txt
 	rm -f bugs.txt
@@ -131,28 +129,28 @@ unixdist: $(TARGET)
 	cp txt/bugs.txt .
 	cp txt/inidriv.txt .
 	cp txt/README.txt .
-	tar -cvf $(UNIXDISTNAME)_$(ARCH).tar $(DISTFILES)
-	gzip -f $(UNIXDISTNAME)_$(ARCH).tar
+	tar -cvf $(DISTNAME)_$(ARCH).tar $(DISTFILES)
+	gzip -f $(DISTNAME)_$(ARCH).tar
 	rm -f README.txt
 	rm -f inidriv.txt
 	rm -f bugs.txt
 
 srcdist: clean
-	rm -rf $(DOSDISTNAME)s
-	mkdir $(DOSDISTNAME)s
-	cp -r *.txt Makefile ini sample src txt $(DOSDISTNAME)s
-	cd $(DOSDISTNAME)s ; rm -rf sample/tapper
-	cd $(DOSDISTNAME)s ; find . -name "CVS" | xargs rm -rf 
-	cd $(DOSDISTNAME)s ; find . -name ".cvsignore" | xargs rm -rf 
+	rm -rf $(DISTNAME)s
+	mkdir $(DISTNAME)s
+	cp -r *.txt Makefile ini sample src txt $(DISTNAME)s
+	cd $(DISTNAME)s ; rm -rf sample/tapper
+	cd $(DISTNAME)s ; find . -name "CVS" | xargs rm -rf 
+	cd $(DISTNAME)s ; find . -name ".cvsignore" | xargs rm -rf 
 
 dossrcdist: srcdist
-	zip -r $(DOSDISTNAME)S.zip $(DOSDISTNAME)s
-	rm -rf $(DOSDISTNAME)s
+	zip -r $(DISTNAME)S.zip $(DISTNAME)s
+	rm -rf $(DISTNAME)s
 
 unixsrcdist: srcdist
-	tar -cvf $(DOSDISTNAME)S.tar $(DOSDISTNAME)s
-	gzip -f $(DOSDISTNAME)S.tar
-	rm -rf $(DOSDISTNAME)s
+	tar -cvf $(DISTNAME)S.tar $(DISTNAME)s
+	gzip -f $(DISTNAME)S.tar
+	rm -rf $(DISTNAME)s
 
 ##########################################################
 # test targets
