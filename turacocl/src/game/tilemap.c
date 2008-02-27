@@ -171,7 +171,7 @@ tilemap_Load( TuracoInstance * ti, int which )
 
     if( !tmi )
     {
-	//fprintf( stderr, "%s: Unable to load image!\n", buf );
+	/*fprintf( stderr, "%s: Unable to load image!\n", buf ); */
 	return( -1 );
     }
 
@@ -237,7 +237,7 @@ tilemap_SetContains( TuracoInstance * ti, int spriteNumber )
     if( !ti->up->tms || ti->up->tmsn < 0 )
 	return( 0 );
 
-    //printf("Tilemap Contains %d?\n", spriteNumber );
+    /*printf("Tilemap Contains %d?\n", spriteNumber ); */
 
     /* make sure the set is in the bank selected */
 

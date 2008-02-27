@@ -198,7 +198,7 @@ PPM_Save (
 
     if (asbinary == SAVE_ASCII)
     {
-	// output an ascii ppm file..
+	/* output an ascii ppm file.. */
 
 	nperline = 0;
 	for (pix = 0 ; pix < (tosave->width * tosave->height) ; pix++)
@@ -214,7 +214,7 @@ PPM_Save (
 	    }
 	}
     } else {
-	// output a binary ppm file..
+	/* output a binary ppm file.. */
 	for (pix = 0 ; pix < (tosave->width * tosave->height) ; pix++)
 	{
 	    fputc(tosave->data[pix].r, out_fp);
@@ -226,7 +226,7 @@ PPM_Save (
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+/*////////////////////////////////////////////////////////////////////////////*/
 
 FileFormat
 PPM_SupportedFile(
@@ -240,7 +240,7 @@ PPM_SupportedFile(
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+/*////////////////////////////////////////////////////////////////////////////*/
 
 int
 PPM_Query(
