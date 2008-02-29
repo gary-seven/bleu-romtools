@@ -37,6 +37,7 @@ void filereq_add( gui_filereq * req, struct dirent * de )
 {
 	filereq_item * t;
 	filereq_item * ni;
+	FILE * out;
 
 	/* parameter check */
 	if( !req || !de ) return;
@@ -56,6 +57,32 @@ void filereq_add( gui_filereq * req, struct dirent * de )
 	/* files */
 	if( (de->d_type & ~DT_DIR) && !(req->flags & FILEREQ_FILES ))
 		return;
+
+	/* check the file extension... */
+	if( strlen( req->extensions ))
+	{
+		/*
+		** what behaviour do we want here?
+		** if the file has no extension, should we accept
+		** it or fail it?  For now, I'll accept it.
+		*/
+		char * ext = strrchr( de->d_name, '.' );
+
+		if( ext )
+		{
+			char * idx = strcasestr( req->extensions, ext );
+			if( !idx ) 
+			{
+				return;
+			}
+		}
+
+		/*
+		** note; this is not perfect, but it'll work for now.
+		** for example. if req->extensions contained ".csv .png"
+		** then "filename.c" will be allowed
+		*/
+	}
 
 
 	/* allocate space for the new node */
