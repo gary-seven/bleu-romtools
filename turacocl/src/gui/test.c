@@ -200,13 +200,13 @@ void menu_callback( gui_handle * gui, int item_id )
 			snprintf( frq.path, LEN_PATH, "/" );
 			snprintf( frq.accept, LEN_BUTTON, "Open" );
 			snprintf( frq.cancel, LEN_BUTTON, "Cancel" );
-			snprintf( frq.extensions, LEN_EXT, "pcx" );
+			snprintf( frq.extensions, LEN_EXT, ".jpg" );
 			(void) gui_file_requestor( gui, &frq );
 
 			/* and the other way to call it */
 			(void) gui_file_requestor_p( gui, &frq,
 				"Select another", ".",
-				"Yup!", NULL, "" );
+				"Yup!", NULL, ".c .pcx .jpg" );
 		break;
 	}
 }

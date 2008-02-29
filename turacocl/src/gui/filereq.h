@@ -47,7 +47,7 @@ typedef struct gui_filereq
 	char path[LEN_PATH];	  /* start path */
 	char accept[LEN_BUTTON];  /* "Open", "Save As" etc... */
 	char cancel[LEN_BUTTON];  /* "Cancel", "Forget it" etc... */
-	char extensions[LEN_EXT]; /* "pcx,png" file exts, "" for any */
+	char extensions[LEN_EXT]; /* ".pcx .png" file exts, "" for any */
 	int flags;
 	int focus;
 
