@@ -92,6 +92,10 @@ typedef struct bitmap_editor {
 	int cy;		/* current y cursor position */
 	int grid;	/* display a grid */
 	int num;	/* display the palette numbers */
+
+	/* for sprite editing */
+	int bank;
+	int sprite;
 } bitmap_editor;
 
 
@@ -101,11 +105,16 @@ typedef struct bitmap_editor {
 typedef struct second_display {
 	WINDOW * win;
 	int which;	/* which buffer to display */
+
+	/* for the sprite selector */
+	int bank; 	/* current bank number */
+	int sprite;	/* current sprite number */
 } second_display;
 
 #define SECOND_SWAP	(0)	/* display the swap bitmap */
 #define SECOND_UNDO	(1)	/* display the undo bitmap */
-#define SECOND_MAX	(1)
+#define SECOND_BANK	(2)	/* display the bank selector */
+#define SECOND_MAX	(2)	/* for the keyboard handler */
 
 
 /* perhaps abstract it out to this */
@@ -264,6 +273,6 @@ void gui_colorborder( WINDOW * w, int color );
 **	application
 **	draw a titled colorborder
 */
-void gui_colorborder_titled( WINDOW * w, int color, char * title );
+void gui_colorborder_titled( WINDOW * w, int color, char * top, char * bottom );
 
 #endif

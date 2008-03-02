@@ -37,7 +37,6 @@ void filereq_add( gui_filereq * req, struct dirent * de )
 {
 	filereq_item * t;
 	filereq_item * ni;
-	FILE * out;
 
 	/* parameter check */
 	if( !req || !de ) return;
@@ -381,7 +380,7 @@ int gui_file_requestor( gui_handle * gui, gui_filereq * frq )
 		frq_path( gui, req, frq );
 		frq_listing( gui, req, frq );
 
-		gui_colorborder_titled( req, COLOR_BORDER_SELECTED, frq->title);
+		gui_colorborder_titled( req, COLOR_BORDER_SELECTED, frq->title, NULL );
 		frq_buttons( gui, req, frq );
 
 		wrefresh( req );

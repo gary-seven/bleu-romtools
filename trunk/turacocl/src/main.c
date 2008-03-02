@@ -10,6 +10,7 @@
 #include "turaco.h"
 #include "romio.h"
 #include "errors.h"
+#include "app.h"
 
 
 
@@ -19,9 +20,9 @@
  */
 void version( void )
 {
-    fprintf( stderr, "Turaco CL  v" J_VERSION "  " J_DATE "\n" );
-    fprintf( stderr, "    by Jerry Carpenter\n" );
-    fprintf( stderr, "       turacocl@umlautllama.com\n" );
+    fprintf( stderr, "Turaco CL  v" BL_VERSION "  " BL_DATE "\n" );
+    fprintf( stderr, "    by Scott Lawrence\n" );
+    fprintf( stderr, "       yorgle@gmail.com\n" );
     fprintf( stderr, "       http://www.umlautllama.com\n\n" );
 }
 
@@ -87,6 +88,12 @@ int main( int argc, char ** argv )
     if( ti->up && ti->up->h )
     {
 	usage( argv );
+	return( ERR_NONE );
+    }
+
+    if( ti->up->gui )
+    {
+	run_gui_app();
 	return( ERR_NONE );
     }
 

@@ -7,10 +7,11 @@
 
 
 NAME    := turacocl
+PNAME	:= "Turaco CL"
 DIRNAME := turacoCL
 
-VERSION := 009
-VDATE   := "2008.02.26"
+VERSION := 011
+VDATE   := "2008.03.02"
 
 
 ##########################################################
@@ -19,7 +20,9 @@ VDATE   := "2008.02.26"
 # it out, and use the MSDOS line for MS-DOS
 
 ARCH := $(shell uname -s)
-ARCH ?= NetBSD
+
+
+ARCH ?= NetBSD-CMD
 
 #ARCH := MSDOS
 
@@ -69,6 +72,7 @@ SRCS := \
 
 ifeq ($(CURSES),YES)
 SRCS := $(SRCS) \
+	src/gui/app.c \
 	src/gui/bits.c \
 	src/gui/filereq.c \
 	src/gui/menu.c \
@@ -155,6 +159,9 @@ unixsrcdist: srcdist
 ##########################################################
 # test targets
 
+test: all
+	./turacocl -gui
+
 testa: all
 	./turacocl -ini txt/inidriv.txt -rom sample -inf ROM -tms pacman
 
@@ -192,9 +199,10 @@ CXX := gcc
 COMMONFLAGS := -O -Wall -pedantic -g \
 	-D$(ARCH) \
 	$(DNCURSES) \
-	-DJ_APPNAME=\"$(TARGET)\" \
-	-DJ_VERSION=\"$(VERSION)\" \
-	-DJ_DATE=\"$(VDATE)\"\
+	-DBL_APPNAME=\"$(TARGET)\" \
+	-DBL_PNAME=\"$(PNAME)\" \
+	-DBL_VERSION=\"$(VERSION)\" \
+	-DBL_DATE=\"$(VDATE)\"\
 	\
 	-Isrc \
 	-Isrc/gfxlib \
