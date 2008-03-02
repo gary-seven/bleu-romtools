@@ -115,26 +115,38 @@ void gui_colorborder( WINDOW * w, int color )
 **	application
 **	draw a titled colorborder
 */
-void gui_colorborder_titled( WINDOW * w, int color, char * title )
+void gui_colorborder_titled( WINDOW * w, int color, char * title, char * legend )
 {
 	int cols = getmaxx( w );
-	int tlen = 0;
+	int rows = getmaxy( w );
+	int tlen_top = title?strlen(title):0;
+	int tlen_bot = legend?strlen(legend):0;
 
 	/* first, draw the regular border */
 	gui_colorborder( w, color );
 
-	/* if there was no title or the length of it is 0, just return.*/
-	if( !title ) return;
-	tlen = strlen( title );
-	if( tlen == 0 ) return;
+	/* display the title, if we have one */
+	if( tlen_top )
+	{
+		/* change to the color, and plop it down, centered */
+		/* if thise doesn't look acceptable, 
+			replace ACS_RTEE, LTEE with [ ] */
+		wattron( w, COLOR_PAIR( color ));
+		mvwaddch( w, 0, cols/2-(tlen_top/2)-2, ACS_RTEE );
+		mvwprintw( w, 0, cols/2-(tlen_top/2)-1, " %s ", title );
+		mvwaddch( w, 0, cols/2+(tlen_top/2)+1, ACS_LTEE );
+		wattroff( w, COLOR_PAIR( color ));
+	}
 
-	/* okay, change to the correct color, and plop it down, centered */
-	/* if thise doesn't look acceptable, replace ACS_RTEE, LTEE with [ ] */
-	wattron( w, COLOR_PAIR( color ));
-	mvwaddch( w, 0, cols/2-(tlen/2)-2, ACS_RTEE );
-	mvwprintw( w, 0, cols/2-(tlen/2)-1, " %s ", title );
-	mvwaddch( w, 0, cols/2+(tlen/2)+1, ACS_LTEE );
-	wattroff( w, COLOR_PAIR( color ));
+	/* draw the legend if we can */
+	if( tlen_bot )
+	{
+		wattron( w, COLOR_PAIR( color ));
+		mvwaddch( w, rows-1, cols/2-(tlen_bot/2)-2, ACS_RTEE );
+		mvwprintw( w, rows-1, cols/2-(tlen_bot/2)-1, " %s ", legend );
+		mvwaddch( w, rows-1, cols/2+(tlen_bot/2)+1, ACS_LTEE );
+		wattroff( w, COLOR_PAIR( color ));
+	} 
 }
 
 
@@ -209,6 +221,8 @@ void gui_bitsw( WINDOW * wnd, int xp, int yp,
 {
 	int x,y,c,ch;
 
+	if( !bmp || !pal || !wnd ) return;
+
 	/* now the bitmap content */
 	for( y=0 ; y<bmp->h ; y++ )
 	{
@@ -278,16 +292,36 @@ void gui_bitsw( WINDOW * wnd, int xp, int yp,
 */
 void gui_second_display( gui_handle * gui )
 {
+	char *title = "Unknown";
+	char legend[32];
+
+	legend[0] = '\0';
+
+	switch( gui->second.which ) {
+	case( SECOND_SWAP ): 
+		title = "Swap";
+		break;
+	case( SECOND_UNDO ): 
+		title = "Undo";
+		break;
+	case( SECOND_BANK ):
+		title = "Bank";
+		snprintf( legend, 32, "B %02x  S %02x",
+			gui->second.bank, gui->second.sprite );
+		break;
+	}
+
 	/* render the border */
 	gui_colorborder_titled( gui->second.win,
 		(gui->user_mode == USER_MODE_SECOND)?
 		    COLOR_BORDER_SELECTED : COLOR_BORDER,
-		(gui->second.which == SECOND_SWAP)? "Swap" :
-		(gui->second.which == SECOND_UNDO)? "Undo" : "None" );
+		title, legend );
 
 	/* draw it out */
 	gui_bitsw( gui->second.win, 1, 1, 
-		(gui->second.which == SECOND_SWAP)? gui->swap : gui->undo,
+		(gui->second.which == SECOND_SWAP)? gui->swap : 
+		(gui->second.which == SECOND_UNDO)? gui->undo :
+		NULL,
 		&gui->pal, 0, 0, 0 );
 
 	/* and refresh it to the screen */
@@ -316,6 +350,8 @@ void gui_text_display( gui_handle * gui )
 */
 void gui_bited_display( gui_handle * gui )
 {
+	char legend[32];
+
 	int focus = (gui->user_mode == USER_MODE_BITED)?1:0;
 	int bc = (focus) ? COLOR_BORDER_SELECTED : COLOR_BORDER;
 
@@ -327,10 +363,14 @@ void gui_bited_display( gui_handle * gui )
 		gui->bited.cx, gui->bited.cy );
 
 	/* render the border */
+	snprintf( legend, 32, "B %02x  S %02x",
+			gui->bited.bank, gui->bited.sprite );
+
 	gui_colorborder_titled ( gui->bited.win, 
 			(gui->user_mode == USER_MODE_BITED)?
 			COLOR_BORDER_SELECTED : COLOR_BORDER,
-			"Editor" );
+			"Editor", legend );
+
 
 	/* if we have focus, draw cursor diamond dots on the border */
 	if( focus )
@@ -561,6 +601,10 @@ void gui_initialize_bited( gui_handle * gui, int w, int h )
 	bits_fill( gui->main );
 	bits_fill( gui->swap );
 	bits_fill( gui->undo );
+
+	/* sprite stuff */
+	gui->bited.bank = 0;
+	gui->bited.sprite = 0;
 }
 
 
@@ -574,6 +618,11 @@ void gui_initialize_second( gui_handle * gui, int w, int h )
 
 	/* curses buffer */
 	gui->second.win = newwin( h+2, (w*2)+2, 3, (gui->w/2) + 3 );
+
+	/* various navigational settings */
+	gui->second.which = 0;
+	gui->second.bank = 0;
+	gui->second.sprite = 0;
 }
 
 
@@ -695,11 +744,11 @@ int gui_keyhandler_bited( gui_handle * gui, int c )
 
 	/* single pixel */
 	case( ',' ): /* get */
-	case( 'p' ): 
 		gui->pal.cursor = bits_getp( gui->main, 
 				gui->bited.cx, gui->bited.cy );
 		used = 1;
 		break;
+
 	case( ' ' ): /* put */
 		bits_undo_checkpoint( gui );
 		bits_setp( gui->main, gui->bited.cx, gui->bited.cy,
@@ -748,21 +797,60 @@ int gui_keyhandler_second( gui_handle * gui, int c )
 {
 	int used = 0;
 
-	switch( c )
-	{
-	case( KEY_UP ): 	/* previous display */
-	case( KEY_LEFT ):
-		gui->second.which--;
-		if( gui->second.which<0 ) gui->second.which = SECOND_MAX;
-		used = 1;
-		break;
+	if( gui->second.which == SECOND_BANK ) { 
+		switch( c ) {
+		case( '0' ):		/* chr = 0  */
+			gui->second.sprite = 0; used = 1; break;
 
-	case( KEY_DOWN ):	/* next display */
-	case( KEY_RIGHT ):
+		case( KEY_UP ): 	/* chr -= 8 */
+			gui->second.sprite -= 8; used = 1; break;
+
+		case( KEY_DOWN ):	/* chr += 8 */
+			gui->second.sprite += 8; used = 1; break;
+
+		case( KEY_LEFT ):	/* chr -- */
+			gui->second.sprite--; used = 1; break;
+
+		case( KEY_RIGHT ):	/* chr ++ */
+			gui->second.sprite++; used = 1; break;
+
+		case( '[' ):		/* previous same-sized bank */
+			gui->second.bank -= 4; used = 1; break;
+
+		case( ']' ):		/* next same-sized bank */
+			gui->second.bank += 4; used = 1; break;
+
+		case( '{' ):		/* previous bank */
+			gui->second.bank--; used = 1; break;
+
+		case( '}' ):		/* next bank */
+			gui->second.bank++; used = 1; break;
+
+		case( 'g' ):		/* get this sprite to the editor */ 
+		case( 'p' ):		/* put editor sprite here */ 
+			break;
+		}
+
+		/* XXX some common bounds checking */
+		if( gui->second.sprite < 0 )   gui->second.sprite = 0;
+		if( gui->second.sprite > 255 ) gui->second.sprite = 255;
+
+		if( gui->second.bank < 0 ) gui->second.bank = 0;
+		if( gui->second.bank >15 ) gui->second.bank = 15; /* for now */
+	}
+
+	switch( c ) {
+	case( ' ' ):	/* spacebar advances to the next display */
 		gui->second.which++;
 		if( gui->second.which>SECOND_MAX ) gui->second.which = 0;
 		used = 1;
 		break;
+/*
+		gui->second.which--;
+		if( gui->second.which<0 ) gui->second.which = SECOND_MAX;
+		used = 1;
+		break;
+*/
 	}
 
 	return( used );

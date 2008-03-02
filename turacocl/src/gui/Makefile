@@ -46,7 +46,8 @@ LIBS += -lcurses
 ##########################################################
 # source files
 
-SRCS := test.c   \
+SRCS := test.c \
+	app.c   \
 	bits.c   \
 	popup.c  \
 	menu.c   \
@@ -115,12 +116,14 @@ CXX := gcc
 
 COMMONFLAGS := -O -Wall -pedantic -g \
 	-D$(ARCH) \
-	-DVERSION=\"$(VERSSTR)\" \
+	-DBL_VERSION=\"$(VERSSTR)\" \
+	-DBL_DATE=\"\" \
+	-DBL_PNAME=\"TestApp\" \
 	$(DNCURSES) 
 
 CXXFLAGS := $(COMMONFLAGS) -mt -instances=static 
 
-CFLAGS := $(COMMONFLAGS)
+CFLAGS := $(COMMONFLAGS) -DTEST_APP
 
 LDFLAGS := -g 
 

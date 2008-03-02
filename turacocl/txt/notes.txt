@@ -1,4 +1,50 @@
 ----------------------------
+Sun Mar  2 15:20:59 EST 2008
+
+    gui app:
+	driver:
+		driver FILE.INI
+		or
+		driver name + driver dir
+		or
+		driver name + ENV driver dir
+
+	rom:
+		inf ROM + rom DIR + files
+
+	pcx:
+		inf PCX + PCX DIR
+
+	autoload if:
+		driver + rom
+		driver + pcx
+
+	Save:
+		Save to input file format
+		Export to PCX / ROMs
+
+	
+	on startup: if able to autoload, do it.
+	then req "Autoloaded DRIVERNAME"  < Ok >
+
+
+	Need:
+		Bank Selector
+		req "Select new Bank:"
+			< mspacbl Bank 0: 8x8 (name) >
+			< mspacbl Bank 1: 16x16 (name) >
+			< mspacbl Bank 2: 16x16 (name) >
+			< mspacbl Bank 3: 16x16 (name) >
+
+		sprite selector
+		right panel has a Sprite mode 
+			left/right select new sprite
+			up/down adds/subtracts 0x08 (?)
+			[] changes to alike bank
+			{} changes to any bank
+
+
+----------------------------
 Sun Feb 24 22:08:27 EST 2008
 
     Updating it all to be "Scott Lawrence" instead of "Jerry Carpenter"
