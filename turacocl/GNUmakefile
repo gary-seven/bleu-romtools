@@ -67,6 +67,7 @@ SRCS := \
 	src/game/turaco.c \
 	src/game/tilemap.c \
 	\
+	src/errors.c \
 	src/params.c \
 	src/main.c
 
