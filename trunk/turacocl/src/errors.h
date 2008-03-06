@@ -6,6 +6,12 @@
  * $Id: errors.h,v 1.12 2003/05/15 19:50:33 jerry Exp $
  */
 
+#ifndef __ERRRORS_H__
+#define __ERRRORS_H__
+
+/* to look up an error, and return it in english... */
+char * error_toString( int errno );
+
 #define ERR_NONE		(0)	/* no error */
 
 #define ERR_NO_TROMS		(-1)	/* TROMS env variable not set */
@@ -46,3 +52,8 @@
 #define ERR_TM_OUT_OF_RANGE	(-25)	/* tilemap selected was out of range */
 #define ERR_TM_BANK_INCONSISTANT (-26)	/* selected tilemap didn't jive */
 
+#define ERR_UNKNOWN		(-27)	/* unknown error */
+
+#define ERR_MAX (-27)
+
+#endif

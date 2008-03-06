@@ -46,7 +46,7 @@ typedef struct {
     char * troms;     /* TROMS    environment variable */
 
     /* misc */
-    int gui;	/* enable GUI mode? */
+    int gui;	/* enable GUI mode? 0=no, !0=yes */
 
     /* debug stuff */
     int dmp;	/* dump out the driver */

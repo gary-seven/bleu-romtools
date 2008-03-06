@@ -70,7 +70,7 @@ int main( int argc, char ** argv )
     ti = turaco_Create();
     if( !ti )
     {
-	fprintf( stderr, "ERROR: General memory error.\n" );
+	fprintf( stderr, "ERROR: %s.\n", error_toString( ERR_NO_MEMORY ));
 	return( ERR_NO_MEMORY );
     }
 
@@ -126,44 +126,68 @@ int main( int argc, char ** argv )
     /* These might be unnecessary */
 	/* determine and load the necessary roms (BACKFILL ROMSPACE) */
 	r = romio_LoadROMs( ti );
-	if( r != ERR_NONE )  return( r );
+	if( r != ERR_NONE ) {
+		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		return( r );
+	}
 
 	/* decode the rom into an image buffer */
 	/* this might be unnecessary */
 	r = turaco_DecodeImageFromRomBuffer( ti );
-	if( r != ERR_NONE )  return( r );
+	if( r != ERR_NONE ) {
+		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		return( r );
+	}
     /* */
 
 	/* load in image file(s) */
 	r = turaco_LoadImages( ti );
-	if( r != ERR_NONE)   return( r );
+	if( r != ERR_NONE ) {
+		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		return( r );
+	}
 
 	/* import the tilemap image information */ /* this is a hack. sorry. */
 	turaco_OverlayTilemapImages( ti );
 
 	/* encode and save out the roms */
 	r = turaco_EncodeRomBufferFromImage( ti );
-	if( r != ERR_NONE)   return( r );
+	if( r != ERR_NONE ) {
+		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		return( r );
+	}
 
 	r = romio_SaveROMs( ti, ROM_FORMAT_BINARY );
-	if( r != ERR_NONE)   return( r );
+	if( r != ERR_NONE ) {
+		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		return( r );
+	}
     }
 
     if( !strcmp( ti->up->inf, "ROM" ) )    /*** ROM to IMG  ***/
     {
 	/* determine and load the necessary roms */
 	r = romio_LoadROMs( ti );
-	if( r != ERR_NONE )  return( r );
+	if( r != ERR_NONE ) {
+		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		return( r );
+	}
 
 	/* decode the rom into an image buffer */
 	r = turaco_DecodeImageFromRomBuffer( ti );
-	if( r != ERR_NONE )  return( r );
+	if( r != ERR_NONE ) {
+		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		return( r );
+	}
 
 	/* roms are loaded! */
 
 	/* save out the bank, key, and checkerboard image files */
 	r = turaco_SaveImages( ti );
-	if( r != ERR_NONE)   return( r );
+	if( r != ERR_NONE ) {
+		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		return( r );
+	}
     }
 
     return( ERR_NONE );
