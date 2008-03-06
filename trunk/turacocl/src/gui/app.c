@@ -37,18 +37,31 @@ gui_menuitem gui_menuitems[] = {
 	{ 199, END },
 
 	/* Application menu... */
-	{ 200, CMD, ' ', "Version", BL_PNAME " version " 
+	{ 200, 250, 'f', "_Focus", "Keyboard input focus" },
+	{ 201, 260, 's', "_Second", "Second bitmap window display" },
+	{ 202, CMD, ' ', "Version", BL_PNAME " version " 
 					BL_VERSION " - " 
 					BL_DATE },
-	{ 201, CMD, ' ', "Author", "Scott Lawrence  http://umlautllama.com" },
-	{ 211, CMD, 'h', "_Help", "Application help" },
+	{ 203, CMD, ' ', "Author", "Scott Lawrence  http://umlautllama.com" },
+	{ 204, CMD, 'h', "_Help", "Application help" },
 	{ 222, CMD, 'q', "_Quit", "Exit from from the application" },
+	{ 229, END },
+
+	{ 250, CMD, 'n', "_Nothing", "Nothing has focus" },
+	{ 251, CMD, 'b', "_Bitmap", "Bitmap Editor (left)" },
+	{ 252, CMD, 'p', "_Palette", "Palette Selector and Editor" },
+	{ 253, CMD, 's', "_Second", "Second bitmap window (right)" },
+	{ 259, END },
+
+	{ 260, CMD, 's', "_Swap", "Swap buffer display" },
+	{ 261, CMD, 'u', "_Undo", "Undo buffer display" },
+	{ 262, CMD, 'b', "_Bank", "Bank sprite buffer selector" },
 	{ 299, END },
 
 	/* File IO menu */
 	{ 300, 320, 'l', "_Load", "Load in sprite data" },
-	{ 301, CMD, 'r', "_Revert", "Revert to disk data" },
-	{ 302, CMD, 's', "_Save", "Save out to disk" },
+	{ 301, CMD, 'r', "_Revert", "Revert to disk data from loaded format" },
+	{ 302, CMD, 's', "_Save", "Save out to disk in loaded format" },
 	{ 303, 330, 'a', "Save _As", "Save out to disk with a different name" },
 	{ 304, END },
 
