@@ -94,6 +94,7 @@ int main( int argc, char ** argv )
     if( ti->up->gui )
     {
 	run_gui_app();
+	version();
 	return( ERR_NONE );
     }
 
