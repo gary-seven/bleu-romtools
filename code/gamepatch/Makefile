@@ -8,6 +8,7 @@
 # main definitions
 VERSION	:= 0.05
 THISDIR := pacpatch
+ROMSDIR := ~/sw/share/roms
 
 #	TARGET		ROMSET		SRCSET		GFX	ALSO
 # 	------		------		------		---	----
@@ -33,9 +34,13 @@ THISDIR := pacpatch
 #	dmtron		tron		dmtron.orig
 
 # define these four based on the above table.
+# the .asm file
 TARGET  := fast
+# the source graphics
 GFXSET  := mspacmab
-SRCSET	:= mspacmab.orig
+# the source romset
+SRCSET	:= mspacmab
+# the destination romset
 ROMSET	:= mspacmab
 
 
@@ -71,7 +76,7 @@ IHX	:= $(ASM:%.asm=%.ihx)
 
 # listings of roms
 GENERATEDROMS := $(shell $(GENROMS) auxfiles/$(ROMSET).roms -listall)
-ORIGROMS := $(GENERATEDROMS:%=$(SRCSET)/%)
+ORIGROMS := $(ROMSDIR)/*
 ROMFILES := $(GENERATEDROMS:%=$(ROMSET)/%)
 
 ################################################################################
@@ -83,7 +88,8 @@ listing: $(LSTS)
 
 # roms: generate the rom files from the .ihx file via 'genroms'
 roms:	$(IHX)
-	cp $(ORIGROMS) $(ROMSET)
+	-mkdir $(ROMSET)
+	cp $(ROMSDIR)/$(ROMSET)/* $(ROMSET)
 	cd $(ROMSET) ; $(GENROMS) ../auxfiles/$(ROMSET).roms ../$(IHX) -patch . 
 	cp gfx/$(GFXSET)/*5* $(ROMSET)/
 
@@ -143,6 +149,7 @@ $(IHX): $(RELS)
 # clean: remove extra files
 clean:
 	rm -rf $(IHX) $(RELS) $(LSTS) $(MAPS) $(ROMFILES)
+	rm -rf $(ROMSET)
 	rm -f *.ihx *.rel *.lst *.map
 .PHONY: clean
 
