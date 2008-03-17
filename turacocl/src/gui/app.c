@@ -20,7 +20,6 @@
 #include "bits.h"   /* bitmap operations */
 #include "filereq.h"
 
-
 /* gui_menuitems
 **	this is the actual list of items used for all of the menus
 */

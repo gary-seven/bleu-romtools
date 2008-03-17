@@ -55,8 +55,9 @@ Date		Number	Status	Description
 2003/04/16	13	Fixed	-rod seems to have no effect
 				Fixed 2003-04-17
 
-2003/05/29	14	Open	It should still build roms if none were found
+2003/05/29	14	Fixed	It should still build roms if none were found
 				to backfill with.
+				Fixed 2008-03-16
 
 2003/05/29	15	Fixed	It should be more tolerant to >n color images
 				with repeating colors. (ie, photoshop PCX files)
@@ -65,5 +66,3 @@ Date		Number	Status	Description
 2006/02/13	16	Fixed	If an -ini file is specified, but there is no
 				driver env-var set, it should still work
 				Fixed 2008-02
-
-$Id: bugs.txt,v 1.12 2003/05/31 03:16:03 jerry Exp $

@@ -171,7 +171,7 @@ romio_LoadROMs( TuracoInstance * ti )
     }
 
     /* allocate ROM buffer size needed */
-    ti->romBuffer = (char *) malloc( maxRomSpace );
+    ti->romBuffer = (char *) calloc( maxRomSpace, 1 );
     ti->romBufferSize = maxRomSpace;
     if( !ti->romBuffer )  return( ERR_NO_MEMORY );
     
@@ -206,31 +206,33 @@ romio_LoadROMs( TuracoInstance * ti )
 
 		if( statbuf.st_size != ti->gd->romFileDescs[c].size )
 		{
-		    fprintf( stderr, "File was the wrong size.\n" );
+		    fprintf( stderr, "Source file was not found or the wrong size.\n" );
 		    fprintf( stderr, "Was %d, expecting %d.\n", 
 				(int)statbuf.st_size,
 				(int)ti->gd->romFileDescs[c].size );
-		    return( ERR_BAD_FILE_SIZE );
-		}
+		    fprintf( stderr, "Starting with a blank buffer..." );
 
-		fileROM = fopen( r, "rb" );
-		if( fileROM )
-		{
-		    /* starting position in the buffer to load into */
-		    d = ti->gd->romFileDescs[c].offset; 
+		} else {
 
-		    /* read from the file into the buffer... */
-		    do
+		    fileROM = fopen( r, "rb" );
+		    if( fileROM )
 		    {
-			bytesread = fread( filebuf, 1, FILEBUFSIZE, fileROM );
-			for( e = 0 ; e < bytesread ; e++ )
-			    ti->romBuffer[d+e] = filebuf[e];
+			/* starting position in the buffer to load into */
+			d = ti->gd->romFileDescs[c].offset; 
 
-			d += bytesread;
-		    } while( bytesread );
+			/* read from the file into the buffer... */
+			do
+			{
+			    bytesread = fread( filebuf, 1, FILEBUFSIZE, fileROM );
+			    for( e = 0 ; e < bytesread ; e++ )
+				ti->romBuffer[d+e] = filebuf[e];
 
-		    /* done.  close the file. */
-		    fclose( fileROM );
+			    d += bytesread;
+			} while( bytesread );
+
+			/* done.  close the file. */
+			fclose( fileROM );
+		    }
 		}
 	    }
 	}

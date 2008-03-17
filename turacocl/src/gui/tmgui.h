@@ -184,6 +184,7 @@ struct gui_handle_struct {
 	gui_menuitem *menuitems;
 	gui_menu_fcn cb;
 
+	/* gui elements */
 	status_bar sb;		/* the status bar */
 	palette_editor pal;	/* the palette editor */
 	bitmap_editor bited;	/* the bitmap editor */
