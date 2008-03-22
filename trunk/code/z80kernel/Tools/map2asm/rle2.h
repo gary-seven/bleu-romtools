@@ -40,7 +40,7 @@
 **	The LUT is essentially the 16 most used bytes in the screen 
 **	information.
 
-#define RLE_CMD_SKIP		(0x20)	/* skip _D screen positions */
+#define RLE_CMD_SKIP		(0x20)	/* skip _D screen positions (0..1f) */
 /* example:	0x23	
 		ScreenPos += 3
 */
@@ -91,5 +91,13 @@
 		Screen[ScreenPos++] = 0x45
 */
 
-#define RLE_CMD_END		(0x00)	/* end of image */
+/* if _C_D & RLE_COMMAND_MASK == 0x00 , then it's an immediate command.
+	_D contains the special command number. 
+	Example usage is not provided for these, as they are single
+	byte commands in the data stream, and it is unnecessary.
+*/
+#define RLE_CMD_IMMEDIATE	(0x00)		/* _C = 0x00, _D = Cmd No. */
 
+#define RLE_CMDI_END		(0x00 | 0x00)	/* end of image data stream */
+#define RLE_CMDI_RESTART	(0x00 | 0x01)	/* restart at starting pos */
+#define RLE_CMDI_NEXT		(0x00 | 0x02)	/* restart at _S+0x400 */
