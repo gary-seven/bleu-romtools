@@ -5,6 +5,7 @@
  */
 
 #include "errors.h"
+#include "locale.h"
 
 char *errors[] = {
 	"None",
@@ -46,5 +47,5 @@ char *errors[] = {
 char * error_toString( int errno )
 {
 	if( (errno > 0) || (errno < ERR_MAX) ) errno = ERR_UNKNOWN;
-	return( errors[ -errno ] );
+	return( locale_( errors[ -errno ]) );
 }

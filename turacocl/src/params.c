@@ -9,6 +9,7 @@
 #include <sys/types.h> /* opendir */
 #include <dirent.h>    /* opendir */
 #include "params.h"
+#include "locale.h"
 #include "errors.h"
 #include "gfxlib.h"
 
@@ -110,6 +111,7 @@ params_ParseArgv( UserParams * pup, int argc, char ** argv )
 	    else if (!strcmp( argv[ac], "-chk" ))  pup->chk = argv[++ac];
 	    else if (!strcmp( argv[ac], "-wid" ))  pup->wid = atoi(argv[++ac]);
 
+	    else if (!strcmp( argv[ac], "-lang" )) locale_SetCode( argv[++ac]);
 #ifdef USE_CURSES
 	    else if (!strcmp( argv[ac], "-gui" ))  pup->gui = 1;
 #endif
@@ -197,7 +199,9 @@ params_Verify( UserParams * pup )
 
     if( (!pup->inf) || (strcmp(pup->inf, "ROM") && strcmp(pup->inf, "IMG") ) )
     {
-	fprintf( stderr, "Error: You must specify either -inf ROM or -inf IMG!\n");
+	fprintf( stderr, "%s: %s\n",
+		locale_( "ERROR" ),
+		locale_( "You must specify either ROM or IMG with -inf" ));
 	return( ERR_CONVERSION_UNKNOWN );
     }
 
@@ -234,35 +238,68 @@ params_Verify( UserParams * pup )
  */
 void params_Usage( FILE * fp )
 {
-    fprintf( fp, "%s",
-	    "    == COMMON ==\n"
-	    "\t-drv DriverName          Select the driver to use\n"
-	    "\t-ini AbsoluteDriverPath  Use this specific driver\n"
-	    "\t-inf (IMG|ROM)           Select the input format\n" 
-	    "\t-bnk BankNumber          Which bank to use\n"
-	    "\t-pal PaletteNumber       Which palette to use\n" 
+    fprintf( fp, 
+	    "    == %s ==\n"
+	    "\t-drv DriverName          %s\n"
+	    "\t-ini AbsoluteDriverPath  %s\n"
+	    "\t-inf (IMG|ROM)           %s\n" 
+	    "\t-bnk BankNumber          %s\n"
+	    "\t-pal PaletteNumber       %s\n" 
+	    "\n",
+		locale_( "COMMON" ),
+		locale_( "Select the driver to use" ),
+		locale_( "Use this specific driver" ),
+		locale_( "Select the input format" ),
+		locale_( "Which bank to use" ),
+		locale_( "Which palette to use" )
 		);
-    fprintf( fp, "%s",
-	    "\t-key KeyFileName         The palette key filename\n"
-	    "\t-rom InputDirectory      Absolute ROM input directory\n"
-	    "\t-ff  (PPM|PCX)           Image format to use (PCX is default)\n"
-	    "\t-tms TilemapSetName	Import/Export tilemaps along with banks\n"
-	    "\t-dmp			Dump out the driver structure\n"
-	    "\n" );
-    fprintf( fp, "%s",
-	    "    == IMG to ROM ==   (-inf IMG)\n"
-	    "\t-rod OutputDirectory     Absolute ROM output directory\n"
-	    "\n" );
-    fprintf( fp, "%s",
-	    "    == ROM to IMG ==   (-inf ROM)\n"
-	    "\t-dbf BankImageFile       Force this filename for the bank image\n"
-	    "\t-chk CheckerboardFile    Force this filename for the checkerboard\n"
-	    "\t-wid NumberSpritesWide   How many sprites across\n"
-	    "\n" );
+
+    fprintf( fp,
+	    "\t-key KeyFileName         %s\n"
+	    "\t-rom InputDirectory      %s\n"
+	    "\t-ff  (PPM|PCX)           %s\n"
+	    "\t-tms TilemapSetName      %s\n"
+	    "\t-dmp                     %s\n"
+	    "\n",
+		locale_( "The palette key filename" ),
+		locale_( "Absolute ROM input directory" ),
+		locale_( "Image format to use (PCX is default)" ),
+		locale_( "Import/Export tilemaps along with banks" ),
+		locale_( "Dump out the driver structure" )
+		);
+
+
+    fprintf( fp, 
+	    "    == %s ==   (-inf IMG)\n"
+	    "\t-rod OutputDirectory     %s\n"
+	    "\n",
+		locale_( "IMG to ROM" ),
+		locale_( "Absolute ROM output directory" )
+		);
+
+    fprintf( fp, 
+	    "    == %s ==   (-inf ROM)\n"
+	    "\t-dbf BankImageFile       %s\n"
+	    "\t-chk CheckerboardFile    %s\n"
+	    "\t-wid NumberSpritesWide   %s\n"
+	    "\n",
+		locale_( "ROM to IMG" ),
+		locale_( "Force this filename for the bank image" ),
+		locale_( "Force this filename for the checkerboard" ),
+		locale_( "How many sprites across" )
+		);
+
+    fprintf( fp, 
+	    "    == %s ==\n"
+	    "\t-lang en                 %s\n",
+		locale_( "MISC" ),
+		locale_( "Select locale code" )
+		 );
 #ifdef USE_CURSES
-    fprintf( fp, "%s",
-	    "    == MISC ==\n"
-	    "\t-gui                     Enable Curses-GUI Mode\n"
-	    "\n" );
+    fprintf( fp, 
+	    "\t-gui                     %s\n",
+		locale_( "Enable Curses-GUI Mode" )
+		 );
 #endif
+    fprintf( fp, "\n" );
 	}

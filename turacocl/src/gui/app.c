@@ -58,11 +58,12 @@ gui_menuitem gui_menuitems[] = {
 	{ 299, END },
 
 	/* File IO menu */
-	{ 300, 320, 'l', "_Load", "Load in sprite data" },
-	{ 301, CMD, 'r', "_Revert", "Revert to disk data from loaded format" },
-	{ 302, CMD, 's', "_Save", "Save out to disk in loaded format" },
-	{ 303, 330, 'a', "Save _As", "Save out to disk with a different name" },
-	{ 304, END },
+	{ 300, CMD, 'g', "_Game", "Select a game driver" },
+	{ 301, 320, 'l', "_Load", "Load in sprite data" },
+	{ 302, CMD, 'r', "_Revert", "Revert to disk data from loaded format" },
+	{ 303, CMD, 's', "_Save", "Save out to disk in loaded format" },
+	{ 304, 330, 'a', "Save _As", "Save out to disk with a different name" },
+	{ 305, END },
 
 	{ 320, CMD, 'p', "_PCX", "Load from PCX image file" },
 	{ 321, CMD, 'r', "_ROM", "Load from ROM data file" },
@@ -121,8 +122,10 @@ gui_menuitem gui_menuitems[] = {
 
 
 /* this is for the confirmation popup */
-char * noyes[] = { "No",
+char * noyesQuit[] = { "No",
 		   "Yes, quit.", NULL };
+char * noyesLose[] = { "No",
+		   "Yes, lose changes.", NULL };
 
 #ifdef TEST_APP
 /* for the test items */
@@ -148,20 +151,27 @@ void menu_callback( gui_handle * gui, int item_id )
 		/* application */
 		case( 222 ):
 			if( gui_popup_requestor( gui, "Really quit?",
-						noyes, 0 ))
+						noyesQuit, 0 ))
 				gui->quit = 1;
 			break;
 
 		/* files */
+		case( 300 ):
+			if( gui_popup_requestor( gui, "Lose changes?", 
+						noyesLose, 0 ))
+				/* Select game drover */
+				;
+			break;
+
 		case( 320 ):
 			if( gui_popup_requestor( gui, "Lose changes?", 
-						noyes, 0 ))
+						noyesLose, 0 ))
 				/* Load from PCX here */
 				;
 			break;
 		case( 321 ):
 			if( gui_popup_requestor( gui, "Lose changes?", 
-						noyes, 0 ))
+						noyesLose, 0 ))
 				;
 				/* Load from ROM here */
 			break;

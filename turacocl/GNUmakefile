@@ -11,7 +11,7 @@ PNAME	:= "Turaco CL"
 DIRNAME := turacoCL
 
 VERSION := 011
-VDATE   := "2008.03.02"
+VDATE   := "2008.04.16"
 
 
 ##########################################################
@@ -67,6 +67,7 @@ SRCS := \
 	src/game/turaco.c \
 	src/game/tilemap.c \
 	\
+	src/locale.c \
 	src/errors.c \
 	src/params.c \
 	src/main.c
