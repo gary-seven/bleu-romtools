@@ -10,6 +10,7 @@
 #include "turaco.h"
 #include "romio.h"
 #include "errors.h"
+#include "locale.h"
 #include "app.h"
 
 
@@ -34,8 +35,11 @@ void version( void )
 void usage( char ** argv )
 {
     version();
-    fprintf( stderr, "Usage: \t%s [options]\n\n" , argv[0] );
-    fprintf( stderr, "Options:\n" );
+    fprintf( stderr, "%s: \t%s [%s]\n\n" , 
+			locale_("Usage"),
+			argv[0],
+			locale_("options") );
+    fprintf( stderr, "%s:\n", locale_("Options") );
     params_Usage( stderr );
 }
 
@@ -67,10 +71,15 @@ int main( int argc, char ** argv )
     /* register an exit handler to clean up everything */
     (void) atexit( myexit );
 
+    /* setup the proper locale code */
+    locale_SetCode( "en" ); /* English for now */
+
     ti = turaco_Create();
     if( !ti )
     {
-	fprintf( stderr, "ERROR: %s.\n", error_toString( ERR_NO_MEMORY ));
+	fprintf( stderr, "%s: %s.\n", 
+			locale_( "ERROR" ),
+			error_toString( ERR_NO_MEMORY ));
 	return( ERR_NO_MEMORY );
     }
 
@@ -128,7 +137,9 @@ int main( int argc, char ** argv )
 	/* determine and load the necessary roms (BACKFILL ROMSPACE) */
 	r = romio_LoadROMs( ti );
 	if( r != ERR_NONE ) {
-		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		fprintf( stderr, "%s: %s.\n", 
+				locale_( "ERROR" ),
+				error_toString( r ));
 		return( r );
 	}
 
@@ -136,7 +147,9 @@ int main( int argc, char ** argv )
 	/* this might be unnecessary */
 	r = turaco_DecodeImageFromRomBuffer( ti );
 	if( r != ERR_NONE ) {
-		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		fprintf( stderr, "%s: %s.\n", 
+				locale_( "ERROR" ),
+				error_toString( r ));
 		return( r );
 	}
     /* */
@@ -144,7 +157,9 @@ int main( int argc, char ** argv )
 	/* load in image file(s) */
 	r = turaco_LoadImages( ti );
 	if( r != ERR_NONE ) {
-		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		fprintf( stderr, "%s: %s.\n", 
+				locale_( "ERROR" ),
+				error_toString( r ));
 		return( r );
 	}
 
@@ -154,13 +169,17 @@ int main( int argc, char ** argv )
 	/* encode and save out the roms */
 	r = turaco_EncodeRomBufferFromImage( ti );
 	if( r != ERR_NONE ) {
-		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		fprintf( stderr, "%s: %s.\n", 
+				locale_( "ERROR" ),
+				error_toString( r ));
 		return( r );
 	}
 
 	r = romio_SaveROMs( ti, ROM_FORMAT_BINARY );
 	if( r != ERR_NONE ) {
-		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		fprintf( stderr, "%s: %s.\n", 
+				locale_( "ERROR" ),
+				error_toString( r ));
 		return( r );
 	}
     }
@@ -170,14 +189,18 @@ int main( int argc, char ** argv )
 	/* determine and load the necessary roms */
 	r = romio_LoadROMs( ti );
 	if( r != ERR_NONE ) {
-		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		fprintf( stderr, "%s: %s.\n", 
+				locale_( "ERROR" ),
+				error_toString( r ));
 		return( r );
 	}
 
 	/* decode the rom into an image buffer */
 	r = turaco_DecodeImageFromRomBuffer( ti );
 	if( r != ERR_NONE ) {
-		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		fprintf( stderr, "%s: %s.\n", 
+				locale_( "ERROR" ),
+				error_toString( r ));
 		return( r );
 	}
 
@@ -186,7 +209,9 @@ int main( int argc, char ** argv )
 	/* save out the bank, key, and checkerboard image files */
 	r = turaco_SaveImages( ti );
 	if( r != ERR_NONE ) {
-		fprintf( stderr, "ERROR: %s.\n", error_toString( r ));
+		fprintf( stderr, "%s: %s.\n", 
+				locale_( "ERROR" ),
+				error_toString( r ));
 		return( r );
 	}
     }
