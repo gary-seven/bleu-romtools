@@ -39,6 +39,7 @@
 **		IX LUT pointer (if used)
 **	The LUT is essentially the 16 most used bytes in the screen 
 **	information.
+*/
 
 #define RLE_CMD_SKIP		(0x20)	/* skip _D screen positions (0..1f) */
 /* example:	0x23	
@@ -101,3 +102,26 @@
 #define RLE_CMDI_END		(0x00 | 0x00)	/* end of image data stream */
 #define RLE_CMDI_RESTART	(0x00 | 0x01)	/* restart at starting pos */
 #define RLE_CMDI_NEXT		(0x00 | 0x02)	/* restart at _S+0x400 */
+
+
+/* procedure for compression
+
+1.  Load in the data file
+	.bmp
+	.map
+	- pull out screen data
+	- pull out or generate LUT data
+
+2. arrange the data in a linear buffer
+
+3. starting at [0], apply each of the compression versions on it, in order
+	sort them according to:
+		the number of bytes they cover
+		the number of bytes they save
+	ie: if the next bytes are 0x03 0x02, then a RLE might save and use 1
+	    but if the nibble repeat notices that the full sequence is
+		0x03 0x02 0x03 0x02, then that will also use the same amount
+		of storage space, but saves more than the window of the first.
+
+
+*/
