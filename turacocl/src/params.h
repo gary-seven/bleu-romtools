@@ -23,6 +23,7 @@ typedef struct {
 
     FileFormat ff; /* which image format to use */
     char * ffs;    /* temporary location for the above, and extension */
+    int    trn;    /* should color 0 be transparent? (PNG only) */
 
     /* IMG to ROM */
     char * rod;	/* rom output directory */

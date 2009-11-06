@@ -105,7 +105,7 @@ PNG_SupportedFile(
 )
 {
 	FILE *fp;
-	char buf[8];
+	unsigned char buf[8];
 	int ret;
 
 	/* do some basic checks first. */

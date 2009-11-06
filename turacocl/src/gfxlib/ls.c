@@ -38,6 +38,9 @@
 #include <string.h>
 #include "image.h"	/* image structure */
 #include "ls.h"		/* for the FileFormat enum */
+#ifdef USE_PNG
+#include "pngio.h"	/* for PNG loader/savers */
+#endif
 #include "ppm.h"	/* for PPM loader/savers */
 #include "pcx.h"	/* for PCX loader/savers */
 
@@ -53,6 +56,9 @@ LS_DetermineFormat(
     
          if ( (ff = PPM_SupportedFile( filename )) != ff_UNKNOWN) return( ff );
     else if ( (ff = PCX_SupportedFile( filename )) != ff_UNKNOWN) return( ff );
+#ifdef USE_PNG
+    else if ( (ff = PNG_SupportedFile( filename )) != ff_UNKNOWN) return( ff );
+#endif
 
     return( ff_UNKNOWN );
 }
@@ -66,15 +72,18 @@ LS_Load(
 {
     switch( ff )
     {
+#ifdef USE_PNG
+	case( ff_PNG ):
+	    return( PNG_Load( filename ));
+#endif
+
 	case( ff_PCX ):
 	    return( PCX_Load( filename ));
-	    break;
 
 	case( ff_PPM_BINARY ):
 	case( ff_PPM_ASCII ):
 	case( ff_PPM ):
 	    return( PPM_Load( filename ));
-	    break;
 
 	case( ff_UNKNOWN ):
 	default:
@@ -94,21 +103,24 @@ LS_Save(
 {
     switch( ff )
     {
+#ifdef USE_PNG
+	case( ff_PNG ):
+	    (void)( PNG_Save( filename, toSave ));
+	    return;
+
+#endif
 	case( ff_PPM ):
 	case( ff_PPM_BINARY ):
 	    (void)( PPM_Save( filename, toSave, SAVE_BINARY ));
 	    return;
-	    break;
 
 	case( ff_PPM_ASCII ):
 	    (void)( PPM_Save( filename, toSave, SAVE_ASCII ));
 	    return;
-	    break;
 
 	case( ff_PCX ):
 	    (void)( PCX_Save( filename, toSave, palette ));
 	    return;
-	    break;
 
 	case( ff_UNKNOWN ):
 	default:
@@ -125,19 +137,21 @@ LS_Query(
 {
     switch( ff )
     {
+#ifdef USE_PNG
+	case( ff_PNG ):
+	    return( PNG_Query() );
+#endif
 	case( ff_PPM ):
 	case( ff_PPM_BINARY ):
 	case( ff_PPM_ASCII ):
 	    return( PPM_Query() );
-	    break;
 
 	case( ff_PCX ):
 	    return( PCX_Query() );
-	    break;
 
 	case( ff_UNKNOWN ):
 	default:
 	    return( QUERY_UNKNOWN );
-	    break;
     }
+    return( QUERY_UNKNOWN );
 }

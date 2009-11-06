@@ -32,13 +32,13 @@ _params_NewUP( void )
 	pup->bnk = pup->pal = 1;
 
 	/* imageFormat */
-	pup->ffs = NULL;
-	pup->ff  = ff_PCX;
+	pup->ffs  = NULL;
+	pup->ff   = ff_PCX;
+	pup->trn  = 0;
 
 	/* tilemap set */
 	pup->tms  = NULL;
 	pup->tmsn = 0;
-	pup->line = 0;
 
 	/* IMG to ROM */
 	pup->rod = NULL;
@@ -96,7 +96,9 @@ params_ParseArgv( UserParams * pup, int argc, char ** argv )
 	    else if (!strcmp( argv[ac], "-ff" ))   pup->ffs = argv[++ac];
 
 	    else if (!strcmp( argv[ac], "-tms" ))  pup->tms = argv[++ac];
-	    else if (!strcmp( argv[ac], "-line" )) pup->line = 1;
+
+	    /* added for PNG exportation, might be useful in the future */
+	    else if (!strcmp( argv[ac], "-trn" ))  pup->trn = 1;
 
 	    /* misc one-shot */
 	    else if (!strcmp( argv[ac], "-h"   ))  pup->h = 1;
@@ -272,17 +274,17 @@ void params_Usage( FILE * fp )
 #else
 	    "\t-ff  (PPM|PCX)           %s\n"
 #endif
+	    "\t-trn                     %s\n"
 	    "\n"
 	    "\t-tms TilemapSetName      %s\n"
-	    "\t-line                    %s\n"
 	    "\n"
 	    "\t-dmp                     %s\n"
 	    "\n",
 		locale_( "The palette key filename" ),
 		locale_( "Absolute ROM input directory" ),
 		locale_( "Image format to use (PCX is default)" ),
+		locale_( "Make color 0 transparent (where applicable, PNG)" ),
 		locale_( "Import/Export tilemaps along with banks" ),
-		locale_( "Use a linear tilemap - 0,1,2,etc in a line" ),
 		locale_( "Dump out the driver structure" )
 		);
 
