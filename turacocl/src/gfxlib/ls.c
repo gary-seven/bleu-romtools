@@ -41,11 +41,9 @@
 #ifdef USE_PNG
 #include "pngio.h"	/* for PNG loader/savers */
 #endif
-#include "ppm.h"	/* for PPM loader/savers */
-#include "pcx.h"	/* for PCX loader/savers */
+#include "ppmio.h"	/* for PPM loader/savers */
+#include "pcxio.h"	/* for PCX loader/savers */
 
-#ifdef USE_PNG
-#endif
 
 FileFormat
 LS_DetermineFormat(

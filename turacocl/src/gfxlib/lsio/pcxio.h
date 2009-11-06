@@ -1,5 +1,5 @@
 /*
- *  pcx
+ *  pcxio
  *
  *   simple save/loader for pcx images
  *
