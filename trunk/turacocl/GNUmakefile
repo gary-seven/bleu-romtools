@@ -66,8 +66,8 @@ SRCS := \
 	src/gfxlib/endian.c \
 	src/gfxlib/ls.c \
 	\
-	src/gfxlib/lsio/ppm.c \
-	src/gfxlib/lsio/pcx.c \
+	src/gfxlib/lsio/ppmio.c \
+	src/gfxlib/lsio/pcxio.c \
 	\
 	src/ini/jstr.c \
 	src/ini/ini.c \

@@ -1,5 +1,5 @@
 /*
- *  pcx
+ *  pcxio
  *
  *   simple save/loader for pcx images 
  *
@@ -98,7 +98,7 @@
 #include "endian.h"
 #include "io_util.h"
 #include "ls.h"
-#include "pcx.h"
+#include "pcxio.h"
 
 
 /*

@@ -56,7 +56,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "image.h"
-#include "ppm.h"
+#include "ppmio.h"
 #include "ls.h"
 #include "io_util.h"
 

@@ -1,5 +1,5 @@
 /*
- *  PNGio
+ *  pngio
  *
  *   simple save/loader for png data
  *
