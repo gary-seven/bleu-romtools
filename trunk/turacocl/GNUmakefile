@@ -10,9 +10,8 @@ NAME    := turacocl
 PNAME	:= "Turaco CL"
 DIRNAME := turacoCL
 
-VERSION := 011
-VDATE   := "2008.04.16"
-
+VERSION := 012
+VDATE   := "2009.11.05"
 
 ##########################################################
 
@@ -44,6 +43,7 @@ else
 DNCURSES := -DUSE_CURSES -DNCURSES
 LIBS += -lncurses
 endif
+
 
 ##########################################################
 SRCS := \
@@ -223,6 +223,14 @@ CFLAGS := $(COMMONFLAGS)
 LDFLAGS := -g 
 
 NLIBS := 
+
+##########################################################
+# for PNG support
+
+# LIBS += $(shell libpng-config --libs)
+# CXXFLAGS += $(shell libpng-config --cflags) -DUSE_PNG
+# CFLAGS += $(shell libpng-config --cflags) -DUSE_PNG
+# LDFLAGS += $(shell libpng-config --ldflags)
 
 ##########################################################
 # build

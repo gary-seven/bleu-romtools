@@ -464,15 +464,15 @@ int gui_file_requestor_p( gui_handle * gui, gui_filereq * frq,
 {
 	if( !gui || !frq ) return( -1 );
 
-	snprintf( frq->title, LEN_TITLE, (title)?title:
+	snprintf( frq->title, LEN_TITLE, "%s", (title)?title:
 				(frq->title)?frq->title:"Select file..." );
-	snprintf( frq->path, LEN_PATH, (path)?path: 
+	snprintf( frq->path, LEN_PATH, "%s", (path)?path: 
 				(frq->path)?frq->path:"." );
-	snprintf( frq->accept, LEN_BUTTON, (accept)?accept:
+	snprintf( frq->accept, LEN_BUTTON, "%s", (accept)?accept:
 				(frq->accept)?frq->accept:"Accept" );
-	snprintf( frq->cancel, LEN_BUTTON, (cancel)?cancel:
+	snprintf( frq->cancel, LEN_BUTTON, "%s", (cancel)?cancel:
 				(frq->cancel)?frq->cancel:"Cancel" );
-	snprintf( frq->extensions, LEN_EXT, (ext)?ext:
+	snprintf( frq->extensions, LEN_EXT, "%s", (ext)?ext:
 				(frq->extensions)?frq->extensions:"" );
 	return( gui_file_requestor( gui, frq ) );
 }

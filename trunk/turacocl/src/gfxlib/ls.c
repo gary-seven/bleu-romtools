@@ -41,6 +41,8 @@
 #include "ppm.h"	/* for PPM loader/savers */
 #include "pcx.h"	/* for PCX loader/savers */
 
+#ifdef USE_PNG
+#endif
 
 FileFormat
 LS_DetermineFormat(

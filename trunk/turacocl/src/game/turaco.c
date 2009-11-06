@@ -225,10 +225,11 @@ turaco_ConfigureFilenames( TuracoInstance * ti )
     } else {
 #ifdef MSDOS
 	sprintf( ti->fn_bank,
+		"%s_%d.%s", driver3, ti->up->bnk+1, ti->up->ffs );
 #else
 	snprintf( ti->fn_bank, FN_MAX,
-#endif
 		"%s_%d.%s", driver3, ti->up->bnk+1, ti->up->ffs );
+#endif
     }
 
 
@@ -240,10 +241,11 @@ turaco_ConfigureFilenames( TuracoInstance * ti )
     } else {
 #ifdef MSDOS
 	sprintf( ti->fn_key,
+		"%s_p%d.%s", driver3, ti->up->pal+1, ti->up->ffs );
 #else
 	snprintf( ti->fn_key, FN_MAX,
-#endif
 		"%s_p%d.%s", driver3, ti->up->pal+1, ti->up->ffs );
+#endif
     }
 
 
@@ -255,10 +257,11 @@ turaco_ConfigureFilenames( TuracoInstance * ti )
     } else {
 #ifdef MSDOS
 	sprintf( ti->fn_check,
+		"%s_%dc.%s", driver3, ti->up->bnk+1, ti->up->ffs );
 #else
 	snprintf( ti->fn_check, FN_MAX,
-#endif
 		"%s_%dc.%s", driver3, ti->up->bnk+1, ti->up->ffs );
+#endif
     }
 
     return( ERR_NONE );

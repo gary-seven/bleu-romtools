@@ -269,11 +269,13 @@ romio_SaveROMs( TuracoInstance * ti, int format )
 	    /* save out each rom file */
 #ifdef MSDOS
 	    (void) sprintf( rpath,
-#else
-	    (void) snprintf( rpath, MAXPATH, 
-#endif
 		    "%s/%s", 
 		    ti->up->rod, ti->gd->romFileDescs[c].filename );
+#else
+	    (void) snprintf( rpath, MAXPATH, 
+		    "%s/%s", 
+		    ti->up->rod, ti->gd->romFileDescs[c].filename );
+#endif
 
 	    printf("  %s\n", rpath );
 

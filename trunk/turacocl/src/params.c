@@ -38,6 +38,7 @@ _params_NewUP( void )
 	/* tilemap set */
 	pup->tms  = NULL;
 	pup->tmsn = 0;
+	pup->line = 0;
 
 	/* IMG to ROM */
 	pup->rod = NULL;
@@ -95,6 +96,7 @@ params_ParseArgv( UserParams * pup, int argc, char ** argv )
 	    else if (!strcmp( argv[ac], "-ff" ))   pup->ffs = argv[++ac];
 
 	    else if (!strcmp( argv[ac], "-tms" ))  pup->tms = argv[++ac];
+	    else if (!strcmp( argv[ac], "-line" )) pup->line = 1;
 
 	    /* misc one-shot */
 	    else if (!strcmp( argv[ac], "-h"   ))  pup->h = 1;
@@ -211,6 +213,10 @@ params_Verify( UserParams * pup )
 	if( !strcmp( pup->ffs, "PPM" ) )
 	{
 	    pup->ff  = ff_PPM;
+#ifdef USE_PNG
+	} else if( !strcmp( pup->ffs, "PNG" )) {
+	    pup->ff  = ff_PNG;
+#endif
 	} else {
 	    pup->ff  = ff_PCX;
 	}
@@ -219,6 +225,10 @@ params_Verify( UserParams * pup )
     if( pup->ff == ff_PPM )
     {
 	pup->ffs = "pnm";
+#ifdef USE_PNG
+    } else if( pup->ff == ff_PNG ) {
+	pup->ffs = "png";
+#endif
     } else {
 	pup->ffs = "pcx";
     }
@@ -257,14 +267,22 @@ void params_Usage( FILE * fp )
     fprintf( fp,
 	    "\t-key KeyFileName         %s\n"
 	    "\t-rom InputDirectory      %s\n"
+#ifdef USE_PNG
+	    "\t-ff  (PPM|PCX|PNG)       %s\n"
+#else
 	    "\t-ff  (PPM|PCX)           %s\n"
+#endif
+	    "\n"
 	    "\t-tms TilemapSetName      %s\n"
+	    "\t-line                    %s\n"
+	    "\n"
 	    "\t-dmp                     %s\n"
 	    "\n",
 		locale_( "The palette key filename" ),
 		locale_( "Absolute ROM input directory" ),
 		locale_( "Image format to use (PCX is default)" ),
 		locale_( "Import/Export tilemaps along with banks" ),
+		locale_( "Use a linear tilemap - 0,1,2,etc in a line" ),
 		locale_( "Dump out the driver structure" )
 		);
 
