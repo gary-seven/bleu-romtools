@@ -46,6 +46,8 @@ locale_hash lhash_en[] = {
 		"Image format to use (PCX is default)" },
 	{ "Import/Export tilemaps along with banks",
 		"Import/Export tilemaps along with banks" },
+	{ "Make color 0 transparent (where applicable, PNG)",
+		"Make color 0 transparent (where applicable, PNG)" },
 	{ "Dump out the driver structure",
 		"Dump out the driver structure" },
 	{ "Absolute ROM output directory",

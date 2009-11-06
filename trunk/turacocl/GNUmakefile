@@ -20,10 +20,22 @@ VDATE   := "2009.11.05"
 
 ARCH := $(shell uname -s)
 
-
 ARCH ?= NetBSD-CMD
 
 #ARCH := MSDOS
+
+##########################################################
+# build configurations
+
+# do we want to include PNG support
+USE_PNG := YES
+
+# NOTE: This is left as configurable for the builder since it may
+#       not be available on the host system, or the builder may not
+#       want to work with PNG files.  I have no idea why this might
+#       be the case, who knows.. perhaps the builder has a fundamental
+#       issue with the library, or works for CompuServe.
+
 
 ##########################################################
 # dos-switching stuff...  (automagic!)
@@ -72,9 +84,12 @@ SRCS := \
 	src/params.c \
 	src/main.c
 
+ifeq ($(USE_PNG),YES)
+SRCS += src/gfxlib/lsio/pngio.c
+endif
+
 ifeq ($(CURSES),YES)
-SRCS := $(SRCS) \
-	src/gui/app.c \
+SRCS += src/gui/app.c \
 	src/gui/bits.c \
 	src/gui/filereq.c \
 	src/gui/menu.c \
@@ -227,10 +242,12 @@ NLIBS :=
 ##########################################################
 # for PNG support
 
-# LIBS += $(shell libpng-config --libs)
-# CXXFLAGS += $(shell libpng-config --cflags) -DUSE_PNG
-# CFLAGS += $(shell libpng-config --cflags) -DUSE_PNG
-# LDFLAGS += $(shell libpng-config --ldflags)
+ifeq ($(USE_PNG),YES)
+LIBS += $(shell libpng-config --libs)
+CXXFLAGS += $(shell libpng-config --cflags) -DUSE_PNG
+CFLAGS += $(shell libpng-config --cflags) -DUSE_PNG
+LDFLAGS += $(shell libpng-config --ldflags)
+endif
 
 ##########################################################
 # build
