@@ -36,6 +36,7 @@ typedef struct {
     /* tilemap */
     char * tms;  /* tilemap set name */
     int    tmsn; /* number of tilemap set: 0 for none, -1 for error */
+    int    line; /* use a linear tilemap 0,1,2,3,4....*/
 
     /* oneshot */
     int h;	/* help */

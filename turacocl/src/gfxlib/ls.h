@@ -31,6 +31,9 @@ typedef enum {
     ff_PPM_BINARY,
     ff_PPM_ASCII,
     ff_PPM,
+#ifdef USE_PNG
+    ff_PNG,
+#endif
     ff_PCX
 } FileFormat;
 
