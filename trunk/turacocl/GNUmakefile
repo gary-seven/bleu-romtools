@@ -27,14 +27,13 @@ ARCH ?= NetBSD-CMD
 ##########################################################
 # build configurations
 
-# do we want to include PNG support
-USE_PNG := YES
+# do we want to include ImageMagick support
+USE_MAGICK := YES
 
 # NOTE: This is left as configurable for the builder since it may
 #       not be available on the host system, or the builder may not
-#       want to work with PNG files.  I have no idea why this might
-#       be the case, who knows.. perhaps the builder has a fundamental
-#       issue with the library, or works for CompuServe.
+#       want to use external libs.  I have no idea why this might
+#       be the case, who knows..
 
 
 ##########################################################
@@ -84,7 +83,7 @@ SRCS := \
 	src/params.c \
 	src/main.c
 
-ifeq ($(USE_PNG),YES)
+ifeq ($(USE_MAGICK),YES)
 SRCS += src/gfxlib/lsio/pngio.c
 endif
 
@@ -113,19 +112,22 @@ tidy:
 	@rm -f $(TARGET).core core
 	@echo Removing generated object files
 	@rm -f $(OBJS)
+.PHONY: tidy
 
 clean:	tidy
 	@echo Removing built executable $(TARGET)
 	@rm -f $(TARGET)
 	@echo Removing ancillary files
-	@rm -f $(TARGET) *pnm *pcx pacman.5*
+	@rm -f $(TARGET) *.png *.pnm *.pcx pacman.5*
 	@rm -f .gdb_history
 	@rm -f .DS_Store
+.PHONY: clean
 
 backup: clean
 	cd .. ;\
 	tar -cvf turacocl-$(VERSION).tar $(DIRNAME) ;\
 	gzip -f turacocl-$(VERSION).tar
+.PHONY: backup
 
 ##########################################################
 # stuff for making binary distributions
@@ -143,6 +145,7 @@ dosbindist: $(TARGET)
 	rm -f README.txt .
 	rm -f inidriv.txt
 	rm -f bugs.txt
+.PHONY: dosbindist
 
 
 unixdist: $(TARGET)
@@ -155,6 +158,7 @@ unixdist: $(TARGET)
 	rm -f README.txt
 	rm -f inidriv.txt
 	rm -f bugs.txt
+.PHONY: unixdist
 
 srcdist: clean
 	rm -rf $(DISTNAME)s
@@ -163,21 +167,30 @@ srcdist: clean
 	cd $(DISTNAME)s ; rm -rf sample/tapper
 	cd $(DISTNAME)s ; find . -name "CVS" | xargs rm -rf 
 	cd $(DISTNAME)s ; find . -name ".cvsignore" | xargs rm -rf 
+.PHONY: srcdist
 
 dossrcdist: srcdist
 	zip -r $(DISTNAME)S.zip $(DISTNAME)s
 	rm -rf $(DISTNAME)s
+.PHONY: dossrcdist
 
 unixsrcdist: srcdist
 	tar -cvf $(DISTNAME)S.tar $(DISTNAME)s
 	gzip -f $(DISTNAME)S.tar
 	rm -rf $(DISTNAME)s
+.PHONY: unixsrcdist
 
 ##########################################################
 # test targets
 
-test: all
+test: all testpng
+
+testgui:
 	./turacocl -gui
+
+testpng: all
+	./turacocl -ini txt/inidriv.txt -rom sample -inf ROM -bnk 1 -trn -ff png
+	./turacocl -ini txt/inidriv.txt -rom sample -inf ROM -bnk 2 -trn -ff png
 
 testa: all
 	./turacocl -ini txt/inidriv.txt -rom sample -inf ROM -tms pacman
@@ -205,6 +218,9 @@ testee: all
 testinstall: test
 	cp pacman.5e /Applications/jerry/Games/MacPacMAME\ 0.58ƒ/ROMS/mspacmab/5e
 
+.PHONY: test testgui testpng testa testaa testb testbb
+.PHONY: testc testd testee testinstall
+
 
 ##########################################################
 # build targets (important stuff)
@@ -214,6 +230,7 @@ CXX := gcc
 
 
 COMMONFLAGS := -O -Wall -pedantic -g \
+	-std=c99 \
 	-D$(ARCH) \
 	$(DNCURSES) \
 	-DBL_APPNAME=\"$(TARGET)\" \
@@ -242,11 +259,11 @@ NLIBS :=
 ##########################################################
 # for PNG support
 
-ifeq ($(USE_PNG),YES)
-LIBS += $(shell libpng-config --libs)
-CXXFLAGS += $(shell libpng-config --cflags) -DUSE_PNG
-CFLAGS += $(shell libpng-config --cflags) -DUSE_PNG
-LDFLAGS += $(shell libpng-config --ldflags)
+ifeq ($(USE_MAGICK),YES)
+LIBS += $(shell MagickWand-config --libs)
+CXXFLAGS += $(shell MagickWand-config --cflags --cppflags) -DUSE_MAGICK
+CFLAGS += $(shell MagickWand-config --cflags --cppflags) -DUSE_MAGICK
+LDFLAGS += $(shell MagickWand-config --ldflags)
 endif
 
 ##########################################################
@@ -262,23 +279,10 @@ $(TARGET):	$(OBJS)
 	@$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 
 ##########################################################
-
-.PHONY:	install
-.PHONY:	all
-.PHONY:	docs
-.PHONY:	tidy
-.PHONY:	clean
-.PHONY:	clobber
-.PHONY:	dosbindist
-.PHONY:	unixbindist
-.PHONY:	srcdist
-.PHONY: dossrcdist
-.PHONY: unixsrcdist
-
-##########################################################
+# dependencies
+#  this is a joke, right?
 
 main.o:	
-
 
 ##########################################################
 # $Id: Makefile,v 1.31 2003/05/31 03:40:20 jerry Exp $

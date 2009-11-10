@@ -31,7 +31,7 @@ typedef enum {
     ff_PPM_BINARY,
     ff_PPM_ASCII,
     ff_PPM,
-#ifdef USE_PNG
+#ifdef USE_MAGICK
     ff_PNG,
 #endif
     ff_PCX
@@ -49,5 +49,7 @@ IMAGE * LS_Load( char * filename, FileFormat ff );
 
 int LS_Query( FileFormat ff );
 
+FILE * LS_ReadableOpen( char * filename );
+FILE * LS_WritableOpen( char * filename );
 
 #endif

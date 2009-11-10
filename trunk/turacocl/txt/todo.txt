@@ -6,15 +6,10 @@ Future work:
 
     _ merge the old drivers with the new
 
-    _ make a bunch of dos fonts into pac fonts
-
     _ Make a version that is a GIMP file importer and exporter
+	NOTE: deferred to ImageMagick instead. 
+		refer to pngio.c for details.
 
     _ palette rom tools
 	- palette rom to PPM
 	- PPM to palette ROM
-
-
-
-$Id: todo.txt,v 1.6 2003/03/18 19:55:11 jerry Exp $
-

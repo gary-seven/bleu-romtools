@@ -34,7 +34,7 @@ src/gfxlib/io_util.[ch]		utility io methods (reading/writing words, etc)
 src/gfxlib/ls.[ch]		image I/O abstraction layer/valve
 
 src/gfxlib/lsio/		IO routines for loading and saving image formats
-src/gfxlib/lsio/pngio.[ch]	loading and saving PNG images
+src/gfxlib/lsio/pngio.[ch]	loading and saving PNG images (requires imagemagick)
 src/gfxlib/lsio/ppmio.[ch]	loading and saving PPM images
 src/gfxlib/lsio/pcxio.[ch]	loading and saving PCX images
 src/gfxlib/lsio/pcx.txt		PCX image file format ( (c)1991 ZSoft )

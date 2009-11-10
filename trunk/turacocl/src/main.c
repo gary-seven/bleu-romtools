@@ -12,9 +12,6 @@
 #include "errors.h"
 #include "locale.h"
 #include "app.h"
-#ifdef USE_PNG
-#include "png.h"
-#endif
 
 
 
@@ -27,11 +24,11 @@ void version( void )
     fprintf( stderr, "Turaco CL  v" BL_VERSION "  " BL_DATE "\n" );
     fprintf( stderr, "    by Scott Lawrence\n" );
     fprintf( stderr, "       yorgle@gmail.com\n" );
-    fprintf( stderr, "       http://www.umlautllama.com\n\n" );
-#ifdef USE_PNG
-    /* fprintf( stderr, "Using %s", PNG_HEADER_VERSION_STRING ); */
-    fprintf( stderr, "%s\n", png_get_copyright(NULL) );
+    fprintf( stderr, "       http://www.umlautllama.com\n" );
+#ifdef USE_MAGICK
+    fprintf( stderr, "    Using ImageMagick (MagickWand) for PNG support\n" );
 #endif
+    fprintf( stderr, "\n" );
 }
 
 
