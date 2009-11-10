@@ -1,7 +1,7 @@
 ========================================
-                           Turaco CL 0.8
+                          Turaco CL 0.12
 
-                             2003 May 30
+                             2009 Nov 10
 
                           Scott Lawrence
                         yorgle@gmail.com
@@ -115,7 +115,6 @@ Appendices
     POSIX compatible layer.  Most development work on Turaco CL has
     been done under OS X as well as Solaris with the occasional
     builds on Linux and MS-DOS.
-
 
 ----------------------------------------
                Currently supported games [3.0]
@@ -460,7 +459,10 @@ Appendices
 			Select paletted PCX image file format (default)
 	-ff PNM
 			Select 24 bit PNM image file format
-		(use only one of these two.)
+	-ff PNG
+			Select paletted PNG image format 
+			NOTE: Export only for now.
+		(use only one of these three.)
 
 	-dmp
 			Dump out the driver, as it was loaded in.
@@ -484,6 +486,9 @@ Appendices
 	-wid Number
 			Select the number of sprites wide that
 			generated images will contain
+	-trn
+			Export the PNG images with transparency enabled
+			(Color 0 will be transparent.)
 
 
     TileMap Options: (Encode/Decode)
@@ -545,15 +550,18 @@ Appendices
 
     DJGPP can be acquired from http://www.delorie.com
 
+    If you wish to compile in PNG support, be sure to enable the
+    inclusion of the ImageMagick libraries in the makefile.  This
+    functionality is enabled by default.
+
 
 ----------------------------------------
                                  Support [D.0]
 
-    The primary support line for Turaco is over at the Turaco Yahoo
-    Group.  Discussions about bugs, feature requests, romset hacks,
-    driver development, all should take place at the group.
+    There is currently no primary support line for Turaco.  The
+    Yahoo support group has been disbanded due to Yahoo Spam.
 
-    You can join (and please do!) from here:
+    It may still be available online here:
 
 	http://groups.yahoo.com/group/Turaco
 
@@ -584,6 +592,3 @@ Legal Mumbo-Jumbo:
     Many of the "supported" games have not been tested.
 
     Product and game names are trademarks of their respective companies.
-
-========================================
-$Id: README.txt,v 1.23 2003/05/31 03:25:31 jerry Exp $

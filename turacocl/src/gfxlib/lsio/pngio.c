@@ -1,7 +1,7 @@
 /*
  *  pngio
  *
- *   simple save/loader for png data
+ *   simple save/loader for png data (via image magick)
  *
  * $Id: PNG.c,v 1.10 2003/04/08 14:57:44 jerry Exp $
  *
@@ -13,12 +13,25 @@
 #include <stdio.h>
 #include <string.h>
 #include "image.h"
-#include <png.h>
 #include "pngio.h"
 #include "ls.h"
 #include "io_util.h"
+#include "turaco.h"
 
-/* ref: http://zarb.org/~gc/html/libpng.html */
+extern TuracoInstance * ti;
+
+#include <wand/MagickWand.h>
+
+/* 
+	this started out as an interface that used libPNG, but
+	after gouging my eyes out with spoons, I realized that
+	doing it that way only brings about pain and suffering
+	So i decided instead to use ImageMagick which provides
+	more file type support, but I'm only using PNG. 
+
+	it should not be difficult to extend this code to add
+	in support for more formats.  Later.
+*/
 
 
 IMAGE *
@@ -26,74 +39,245 @@ PNG_Load (
 	char * filename
 )
 {
-    FILE * in_fp;
-    IMAGE * newimg;
+	FILE * fp = LS_ReadableOpen( filename );
+	unsigned long x,y;
+	unsigned long width=10,height=10;
+	IMAGE * newimg = NULL;
 
-    if (filename == NULL)
-    {
-	printf("Nothing to save.\n");
+	if (fp == NULL)
+	{
+		printf ("%s: Unable to open file\n", filename);
+		return NULL;
+	}
+	fclose( fp );
+
+	fprintf( stderr, "PNG Loading is not yet available.\n" );
 	return NULL;
-    }
-
-    in_fp = fopen(filename, "r");
-    if (in_fp == NULL)
-    {
-	printf ("%s: Unable to open file\n", filename);
-	return NULL;
-    }
-    
-    /* insert loader code here. */
-    newimg = Image_Create(320,240,8);
-    if (newimg == NULL)
-    {
-        printf ("%s: Unable to load file.  Memory error\n", filename);
-        return NULL;
-    }
-
-	/*
-    newimg->width = w;
-    newimg->height = h;
-    newimg->bits = bits;
-	*/
 
 
-    fclose (in_fp);
-    return newimg;
+	/* now convert it to an IMAGE */
+	do {
+		MagickBooleanType status;
+		MagickWand *image_wand;
+		PixelWand **pixels;
+		PixelIterator *iterator;
+
+		MagickWandGenesis();
+		image_wand = NewMagickWand();
+		status = MagickReadImage( image_wand, filename );
+		if( status == MagickFalse ) {
+			printf( "%s: parse error\n", filename );
+			return NULL;
+		}
+		
+		/* insert loader code here. */
+		width = (long)MagickGetImageWidth( image_wand );
+		height = (long)MagickGetImageHeight( image_wand );
+		newimg = Image_Create(width,height,8);
+		if (newimg == NULL)
+		{
+			printf ("%s: Unable to load file.  Memory error\n", filename);
+		} else {
+			/* iterate over the loaded png, and shove it into our user buf */
+			iterator = NewPixelIterator( image_wand );
+			if( iterator == (PixelIterator *) NULL) {
+				/* fail */
+				fprintf( stderr, "Couldn't access pixels.  Fail.\n" );
+			} else {
+				for( y=0 ; y<height ; y++ )
+				{
+					pixels = PixelGetNextIteratorRow( iterator, &width );
+					if( pixels == (PixelWand **)NULL) break;
+					for( x=0 ; x<width ; x++ )
+					{
+						int dpos = (y * width) + x;
+						newimg->data[dpos].r = PixelGetRed( pixels[x] );
+						newimg->data[dpos].g = PixelGetGreen( pixels[x] );
+						newimg->data[dpos].b = PixelGetBlue( pixels[x] );
+					}
+					/* for write (void) PixelSyncIterator( iterator ); */
+				}
+			}
+			iterator = DestroyPixelIterator( iterator );
+		}
+
+		image_wand = DestroyMagickWand( image_wand );
+		MagickWandTerminus();
+
+	} while( 0 );
+
+	printf( "%s: file not read. PNG read not yet supported.\n", filename );
+
+	for( y=0 ; y<newimg->height ; y++ )
+	{
+		for( x=0 ; x<newimg->width ; x++ )
+		{
+		}
+	}
+
+
+	/* get rid of our temporary mem */
+	return newimg;
 }
 
 
 
 void
 PNG_Save (
-	char * filename, 
-	IMAGE * tosave
+	char * filename,  	/* filename to save out to */
+	IMAGE * tosave,		/* the image to save */
+	IMAGE * palette		/* a palette disguised as an image - null if truecolor */
 )
 {
-    FILE * out_fp;
+	FILE * fp = NULL;
+	int width, height;
 
-    if (tosave == NULL || filename == NULL)
-    {
-	printf("Nothing to save.\n");
-	return;
-    }
+	if( tosave == NULL ) {
+		fprintf( stderr, "Nothing to save.\n" );
+		return;
+	}
+	height = tosave->height;
+	width = tosave->width;
 
-    if (tosave->width == 0 || tosave->height == 0)
-    {
-	printf("%dx%d: Illegal image dimensions\n", 
-		    tosave->width, tosave->height);
-	return;
-    }
+	if( width == 0 || height == 0)
+	{
+		fprintf(stderr, "%dx%d: Illegal image dimensions\n", 
+			    tosave->width, tosave->height);
+		return;
+	}
 
-    out_fp = fopen(filename, "w");
-    if (!out_fp)
-    {
-	printf ("%s: Unable to open file\n", filename);
-	return;
-    }
+	fp = LS_WritableOpen( filename );
+	if( !fp || tosave == NULL || filename == NULL)
+	{
+		if( fp ) fclose(fp);
+		printf("Didn't saved nothing.\n");
+		return;
+	}
+	fclose( fp );
 
-	/* saver */
 
-    fclose(out_fp);    
+	do {
+		MagickWand *image_wand;
+		MagickBooleanType status;
+		PixelWand * aColor;
+		PixelWand **pixels;
+		PixelIterator *iterator;
+		int x,y;
+		unsigned long nw;
+
+		MagickWandGenesis();
+		image_wand = NewMagickWand();
+
+		aColor = NewPixelWand();
+	    	PixelSetColor( aColor, "black" );
+
+		/* create our image */
+		status = MagickNewImage( image_wand, (int)width, (int)height, aColor );
+		printf( "MagickNewImage %s\n", status?"TRUE":"false" );
+
+		status = MagickSetImageColorspace( image_wand, RGBColorspace );
+		printf( "MagickSetImageColorspace %s\n", status?"TRUE":"false" );
+		status = MagickSetImageDepth( image_wand, 8 );
+		printf( "MagickSetImageDepth %s\n", status?"TRUE":"false" );
+		status = MagickSetImageChannelDepth( image_wand, AllChannels, 8 );
+		printf( "MagickSetImageChannelDepth %s\n", status?"TRUE":"false" );
+
+		/* set the appropriate image format */
+		if( palette ) {
+			status = MagickSetImageFormat( image_wand, "PNG8" );
+			printf( "MagickSetImageFormat %s\n", status?"TRUE":"false" );
+			if( ti->up->trn ) {
+			    	status = MagickSetImageType( image_wand, PaletteMatteType );
+				printf( "MagickSetImageType PaletteMatteType %s\n", status?"TRUE":"false" );
+			} else {
+				status = MagickSetImageType( image_wand, PaletteType );
+				printf( "MagickSetImageType PaletteType %s\n", status?"TRUE":"false" );
+			}
+		} else {
+			status = MagickSetImageFormat( image_wand, "PNG32" );
+			printf( "MagickSetImageFormat %s\n", status?"TRUE":"false" );
+			if( ti->up->trn ) {
+				status = MagickSetImageType( image_wand, TrueColorMatteType );
+				printf( "MagickSetImageType TrueColorMatteType %s\n", status?"TRUE":"false" );
+			} else {
+				status = MagickSetImageType( image_wand, TrueColorType );
+				printf( "MagickSetImageType TrueColorType %s\n", status?"TRUE":"false" );
+			}
+		}
+		printf( "MagickSetImageType %s\n", status?"TRUE":"false" );
+
+		/* set up the palette */
+		if( palette ) {
+			int cmapidx = 0;
+			for( y=0 ; y<palette->height ; y++ )
+			{
+				for( x=0 ; x<palette->width ; x++ )
+				{
+					PixelWand * pw = NewPixelWand();
+					int ppos = (y*palette->width) + x;
+					int r = palette->data[ppos].r;
+					int g = palette->data[ppos].g;
+					int b = palette->data[ppos].b;
+					PixelSetRed( pw, r );
+					PixelSetGreen( pw, g );
+					PixelSetBlue( pw, b );
+
+					/*PixelSetIndex( aColor, cmapidx ); */
+					status = MagickSetImageColormapColor( image_wand, cmapidx, pw );
+
+					printf( "%s %d: %d %d %d\n", status==MagickTrue?"OK":"BAD", cmapidx, r, g, b );
+					cmapidx++;
+					DestroyPixelWand( pw );
+				}
+			}
+		}
+
+		/* iterate over the loaded png, and shove it into our user buf */
+		iterator = NewPixelIterator( image_wand );
+		if( iterator == (PixelIterator *) NULL) {
+			/* fail */
+			fprintf( stderr, "Couldn't access pixels.  Fail.\n" );
+		} else {
+			for( y=0 ; y<height ; y++ )
+			{
+				pixels = PixelGetNextIteratorRow( iterator, &nw );
+				if( pixels == (PixelWand **)NULL) break;
+				for( x=0 ; x<nw ; x++ )
+				{
+					int dpos = (y * width) + x;
+					int r = tosave->data[dpos].r;
+					int g = tosave->data[dpos].g;
+					int b = tosave->data[dpos].b;
+					int idx = tosave->data[dpos].a; /* A contains index */
+
+					if( palette ) {
+						PixelSetIndex( pixels[x], idx );
+					} else {
+						PixelSetRed( pixels[x], r );
+						PixelSetGreen( pixels[x], g );
+						PixelSetBlue( pixels[x], b );
+					}
+
+					/* set transparency */
+					if( ti->up->trn ) {
+						PixelSetAlpha( pixels[x], (idx==0)?0:255 );
+					}
+				}
+				(void) PixelSyncIterator( iterator );
+			}
+		}
+		iterator = DestroyPixelIterator( iterator );
+
+		status = MagickWriteImage( image_wand, filename );
+
+		if( status == MagickFalse ) {
+			printf( "%s: file save error\n", filename );
+		}
+
+		image_wand = DestroyMagickWand( image_wand );
+		MagickWandTerminus();
+
+	} while( 0 );
 }
 
 
@@ -104,23 +288,25 @@ PNG_SupportedFile(
 	char * filename
 )
 {
-	FILE *fp;
+	/* the PNG file signature */
+	const unsigned char sig[8] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
 	unsigned char buf[8];
-	int ret;
+	FILE *fp = LS_ReadableOpen( filename );
+	int x;
+	int bytesread;
 
 	/* do some basic checks first. */
-	if (!filename) return ff_UNKNOWN;
-
-	fp = fopen(filename, "rb");
 	if (!fp) return ff_UNKNOWN;
 
 	/* now do the libpng checks */
-	ret = fread(buf, 1, 8, fp);
+	bytesread = fread(buf, 1, 8, fp);
 	fclose(fp);
 
-	if (ret != 8) return ff_UNKNOWN;
+	if (bytesread != 8) return ff_UNKNOWN;
 
-	if( !png_check_sig(buf, 8) ) return ff_UNKNOWN;
+	for( x=0 ; x<8 ; x ++ ) {
+		if( buf[x] != sig[x] ) return ff_UNKNOWN;
+	}
 
 	return ff_PNG;
 }
@@ -133,6 +319,8 @@ PNG_Query(
         void
 )
 {
+	/* XXXXX For now, let's just go truecolor, until i can fix PNG8 */
+    /* return( QUERY_PALETTED ); */
     return( QUERY_TRUECOLOR );
 }
 

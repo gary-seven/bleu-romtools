@@ -8,6 +8,7 @@
 #include <string.h>  /* strcmp */
 #include <sys/types.h> /* opendir */
 #include <dirent.h>    /* opendir */
+#include <ctype.h>    /* tolower */
 #include "params.h"
 #include "locale.h"
 #include "errors.h"
@@ -193,6 +194,9 @@ params_Parse( UserParams * pup, int argc, char **argv )
 int
 params_Verify( UserParams * pup )
 {
+    char tbuff[4];
+    int x;
+
     if( !pup ) return( ERR_NO_PARAMS_STRUCT );
 
     if( !pup->tdrivers )
@@ -212,14 +216,19 @@ params_Verify( UserParams * pup )
     /* adjust the file format selector */
     if( pup->ffs )
     {
-	if( !strcmp( pup->ffs, "PPM" ) )
+	strncpy( tbuff, pup->ffs, 3 );
+	tbuff[3] = '\0';
+	for( x=0 ; x < strlen( tbuff ) ; x++ ) tbuff[x] = tolower( tbuff[x] );
+
+	if( !strcmp( pup->ffs, "ppm" ) )
 	{
 	    pup->ff  = ff_PPM;
-#ifdef USE_PNG
-	} else if( !strcmp( pup->ffs, "PNG" )) {
+#ifdef USE_MAGICK
+	} else if( !strcmp( pup->ffs, "png" )) {
 	    pup->ff  = ff_PNG;
 #endif
 	} else {
+	    fprintf( stderr, "Unrecognized format selector: %s.  Using PCX", pup->ffs );
 	    pup->ff  = ff_PCX;
 	}
     }
@@ -227,7 +236,7 @@ params_Verify( UserParams * pup )
     if( pup->ff == ff_PPM )
     {
 	pup->ffs = "pnm";
-#ifdef USE_PNG
+#ifdef USE_MAGICK
     } else if( pup->ff == ff_PNG ) {
 	pup->ffs = "png";
 #endif
@@ -269,7 +278,7 @@ void params_Usage( FILE * fp )
     fprintf( fp,
 	    "\t-key KeyFileName         %s\n"
 	    "\t-rom InputDirectory      %s\n"
-#ifdef USE_PNG
+#ifdef USE_MAGICK
 	    "\t-ff  (PPM|PCX|PNG)       %s\n"
 #else
 	    "\t-ff  (PPM|PCX)           %s\n"

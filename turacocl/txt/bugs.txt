@@ -66,3 +66,7 @@ Date		Number	Status	Description
 2006/02/13	16	Fixed	If an -ini file is specified, but there is no
 				driver env-var set, it should still work
 				Fixed 2008-02
+
+2009/11/10	17	Open	PNG8 Export is not working, while PNG32 is.
+
+2009/11/10	18	Open	PNG8 Import is not tested, and probably faulty.

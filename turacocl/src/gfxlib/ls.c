@@ -38,7 +38,7 @@
 #include <string.h>
 #include "image.h"	/* image structure */
 #include "ls.h"		/* for the FileFormat enum */
-#ifdef USE_PNG
+#ifdef USE_MAGICK
 #include "pngio.h"	/* for PNG loader/savers */
 #endif
 #include "ppmio.h"	/* for PPM loader/savers */
@@ -54,7 +54,7 @@ LS_DetermineFormat(
     
          if ( (ff = PPM_SupportedFile( filename )) != ff_UNKNOWN) return( ff );
     else if ( (ff = PCX_SupportedFile( filename )) != ff_UNKNOWN) return( ff );
-#ifdef USE_PNG
+#ifdef USE_MAGICK
     else if ( (ff = PNG_SupportedFile( filename )) != ff_UNKNOWN) return( ff );
 #endif
 
@@ -70,7 +70,7 @@ LS_Load(
 {
     switch( ff )
     {
-#ifdef USE_PNG
+#ifdef USE_MAGICK
 	case( ff_PNG ):
 	    return( PNG_Load( filename ));
 #endif
@@ -101,9 +101,9 @@ LS_Save(
 {
     switch( ff )
     {
-#ifdef USE_PNG
+#ifdef USE_MAGICK
 	case( ff_PNG ):
-	    (void)( PNG_Save( filename, toSave ));
+	    (void)( PNG_Save( filename, toSave, palette ));
 	    return;
 
 #endif
@@ -122,6 +122,7 @@ LS_Save(
 
 	case( ff_UNKNOWN ):
 	default:
+	    fprintf( stderr, "Unable to save to desired file format" );
 	    break;
 
     }
@@ -135,7 +136,7 @@ LS_Query(
 {
     switch( ff )
     {
-#ifdef USE_PNG
+#ifdef USE_MAGICK
 	case( ff_PNG ):
 	    return( PNG_Query() );
 #endif
@@ -152,4 +153,41 @@ LS_Query(
 	    return( QUERY_UNKNOWN );
     }
     return( QUERY_UNKNOWN );
+}
+
+
+FILE *
+LS_ReadableOpen(
+	char * filename
+)
+{
+	FILE * fp = NULL;
+
+	/* check filename is ok */
+	if( !filename ) return NULL;
+
+	/* open for reading... */
+	fp = fopen( filename, "rb" );
+	if( !fp ) return NULL;
+
+	/* It's Okay! */
+	return fp;
+}
+
+FILE *
+LS_WritableOpen(
+	char * filename
+)
+{
+	FILE * fp = NULL;
+
+	/* check filename is ok */
+	if( !filename ) return NULL;
+
+	/* open for reading... */
+	fp = fopen( filename, "wb" );
+	if( !fp ) return NULL;
+
+	/* It's Okay! */
+	return fp;
 }
