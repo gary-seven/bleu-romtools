@@ -12,8 +12,8 @@
 ; task list table
 ;	- this lists all of the tasks that the menu system provides
 tasklist:
-	.word	movieTask
 	.word	absurdTask
+	.word	movieTask
 	.word	quadblokTask
 	NTASKS = .-tasklist
 	.word	ssaveTask
