@@ -135,7 +135,7 @@ main:
 ;	jp	m2
 
 	call 	rle2_test
-	jr	.
+	;jr	.
 
 
 	cp 	#SOFTBOOT		; check for soft boot

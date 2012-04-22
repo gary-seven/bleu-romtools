@@ -24,6 +24,6 @@
 ; 0x1000 = about a minute
 ; 0x2000 = about two minutes
 	
-	SSTIMEOUT	= (ONESECOND * 10)
+	SSTIMEOUT	= (ONESECOND * 30)
 
 	DEATHTIME	= (ONESECOND * 4)

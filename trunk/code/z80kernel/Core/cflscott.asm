@@ -45,7 +45,7 @@ draw_cfl:
 
 	ld	a, #9
 	ld	hl, #(.cprt)
-	ld	bc, #0x0302
+	ld	bc, #0x0102
 	call	putstrA			; draw (c)2006...
 
 	ld	a, #8
@@ -62,8 +62,8 @@ draw_cfl:
         ret
 
 .cprt:
-	.byte	21
-	.ascii	"@2006 UmlautLlama.com"
+	.byte	26
+	.ascii	"@2006-2012 UmlautLlama.com"
 
 .name:
 	.byte	14
