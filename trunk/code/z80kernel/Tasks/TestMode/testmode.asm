@@ -736,25 +736,25 @@ tm_scr7:
 	
 	ld	a, #C_yellow
 	ld	hl, #VERSION		; BL Game Kernel v0.0x
-	ld	c, #0x18
+	ld	c, #0x1b
 	call	textcenter
 	call	putstrB
 
 	ld	a, #C_orange
 	ld	hl, #.name		; Scott Lawrence
-	ld	c, #0x1b
-	call	textcenter
-	call	putstrB
-
-	ld	hl, #ssTemail		; yorgle@gmail.com
 	ld	c, #0x1d
 	call	textcenter
 	call	putstrB
 
-	ld	hl, #.cprt		; (c)2006 UmlautLlama.com
+	ld	hl, #ssTemail		; yorgle@gmail.com
 	ld	c, #0x1f
 	call	textcenter
 	call	putstrB
+
+	ld	hl, #.cprt		; (c)2006 UmlautLlama.com
+	ld	c, #0x03
+	call	textcenter
+	call	putstrA
 
 
 
@@ -778,35 +778,44 @@ tm_scr7:
 	ld	hl, #(tasklist)		; <= FTASKS
 	xor	a
 .tms7_001:
-	push	af
+	push	af			; so we can restore it at the end
 
 	; select the right color into E
 	push	af
 	ld	e, #C_green
+	add	a			; a=a*2
 	cp	#(NTASKS)
 	jr	c, .tms7_002
 	ld	e, #C_dgreen
 .tms7_002:
 	pop	af
 
+
 	; select the right position
 	push	de
 	push	af
+
+	ld	c, a
 	add	a, #0x05		; 5 rows down, every other line
+	add	a, c
+	add	a, c			; a = 5 * (a*3)
+
+	ld	c, a			; c = 5 * (a*3)
+	
+	pop	af
 
 	; task ID number to screen
 	ld	b, #0x03
-	ld	c, a
-	sub	a, #0x05		; restore A
-	rra				; a=a/2 (2 byte offset)
 	call	prtXYbyteB		; print the digit
-	pop	af
 
 	; select the right title text
 	ld	b, #0x06		; adjust position
 	ld	hl, #(tasklist)
 	ld	d, #0x00
+	push	af
+	add	a
 	ld	e, a			; DE = current offset
+	pop	af
 	rst	0x10			; HL points to current task
 	push	hl
 	pop	ix
@@ -866,9 +875,9 @@ tm_scr7:
 	ld 	b, #0x0e		; v00 00 -> v00.00
 	call	putstrB
 
-	; finish up
+	; finish up - increment and check for done-ness
 	pop	af
-	add	a, #2			; go to the next one
+	inc 	a
 	cp	#(FTASKS)
 	jr	nz, .tms7_001
 
