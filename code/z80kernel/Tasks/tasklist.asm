@@ -19,7 +19,7 @@ tasklist:
 	.word	ssaveTask
 	.word	testModeTask
 	.word	pactrackerTask
-	FTASKS = .-tasklist
+	FTASKS = (.-tasklist)/2
 
 ;; no need to have this in the menu...
 	.word 	ssaveTask
