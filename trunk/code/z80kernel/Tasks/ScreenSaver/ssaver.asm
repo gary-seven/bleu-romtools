@@ -9,6 +9,8 @@
 ; The module scanner block
 ssaveTask:
 	.word	ss_title	; title text
+	.byte	0x01		; version major
+	.byte	0x00		; version minor
 	.word	ss_desc1	; description line 1
 	.word	ss_desc2	; description line 2
 	.word	ss_att0		; attract sequence init

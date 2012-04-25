@@ -11,6 +11,8 @@
 ; The module definition block
 xxTask:
 	.word	xx_title	; title text
+	.byte	0x00		; version major
+	.byte	0x01		; version minor
 	.word	xx_desc1	; description line 1
 	.word	xx_desc2	; description line 2
 	.word	xx_att0		; attract sequence init

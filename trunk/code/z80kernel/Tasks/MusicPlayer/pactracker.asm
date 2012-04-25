@@ -12,6 +12,8 @@
 
 pactrackerTask:
 	.word	pt_title	; title text
+	.byte	0x00		; version major
+	.byte	0x10		; version minor
 	.word	pt_desc1	; description line 1
 	.word	pt_desc2	; description line 2
 	.word	0x0000		; attract sequence init

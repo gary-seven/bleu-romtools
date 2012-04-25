@@ -344,6 +344,7 @@ Get1Right:
 
 ;;; and the "Is" versions
 
+Is1North:
 Is1Up:
 	xor	a
 	ld	hl, #(p1_port)
@@ -352,6 +353,7 @@ Is1Up:
 	ld	a, #0x01
 	ret
 
+Is1South:
 Is1Down:
 	xor	a
 	ld	hl, #(p1_port)
@@ -360,6 +362,7 @@ Is1Down:
 	ld	a, #0x01
 	ret
 
+Is1West:
 Is1Left:
 	xor	a
 	ld	hl, #(p1_port)
@@ -368,6 +371,7 @@ Is1Left:
 	ld	a, #0x01
 	ret
 
+Is1East:
 Is1Right:
 	xor	a
 	ld	hl, #(p1_port)
@@ -375,6 +379,7 @@ Is1Right:
 	ret	nz
 	ld	a, #0x01
 	ret
+
 
 ;;; player 2
 
