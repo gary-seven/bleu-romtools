@@ -10,6 +10,8 @@ TESTMODE_START:
 ; The module scanner block
 testModeTask:
 	.word	tm_title	; title text
+	.byte	0x01		; version major
+	.byte	0x00		; version minor
 	.word	tm_desc1	; description line 1
 	.word	tm_desc2	; description line 2
 	.word	tm_att0		; attract sequence init
@@ -584,7 +586,7 @@ tm_scr2:
 	ld	c, a			; (x,y) = (0x18, A)
 	ld	e, #C_white
 	call	prtXYbyteB		; print the digit (right)
-	ld	b, #0x17
+	ld	b, #0x13
 	call	prtXYbyteB		; print the digit (left)
 	inc	a
 	pop	bc
@@ -764,11 +766,11 @@ tm_scr7:
 	call	putstrB
 
 	ld	hl, #.tm7Tname
-	ld	bc, #0x0b03
+	ld	bc, #0x0c03
 	call	putstrB
 
 	ld	hl, #.tm7Tcreds
-	ld	bc, #0x1603
+	ld	bc, #0x1703
 	call	putstrB
 
 
@@ -791,6 +793,8 @@ tm_scr7:
 	push	de
 	push	af
 	add	a, #0x05		; 5 rows down, every other line
+
+	; task ID number to screen
 	ld	b, #0x03
 	ld	c, a
 	sub	a, #0x05		; restore A
@@ -799,7 +803,7 @@ tm_scr7:
 	pop	af
 
 	; select the right title text
-	ld	b, #0x07		; adjust position
+	ld	b, #0x06		; adjust position
 	ld	hl, #(tasklist)
 	ld	d, #0x00
 	ld	e, a			; DE = current offset
@@ -813,17 +817,56 @@ tm_scr7:
 	ld	a, e			; restore the color
 	call	putstrB			; print the text
 
+	; N credits
 	push	ix
 	pop	hl			; restore the task pointer
 	ld	de, #TICRED
 	add	hl, de
-	ld	b, #0x1a		; adjust horizontal position
+	ld	b, #0x19		; adjust horizontal position
 	ld	e, a			; restore the color
 	ld	a, (hl)
 	cp	#0x00
 	call	nz, prtXYbyteB		; print it
 	call	z, .tm7free
 
+	; version info
+
+		; major
+	inc	c			; next row
+
+
+	push 	ix
+	pop	hl
+	ld 	de, #TIVERMJ
+	add	hl, de			; index of major version number
+	ld	a, (hl)
+	ld 	b, #0x0d		; x
+	ld	e, #0x09		; brown
+	call	prtXYbyteB		; print it
+
+		; minor
+	push 	ix
+	pop	hl
+	ld 	de, #TIVERMN
+	add	hl, de
+	ld	a, (hl)
+	ld	b, #0x10		; x
+	ld	e, #0x09		; brown
+	call	prtXYbyteB		; print it
+
+		; embelishments
+		; v
+	ld	hl, #.tm7Tver
+	ld	a, #0x09		; brown
+	ld 	b, #0x0b		; 00 00 -> v00 00
+	call	putstrB
+
+		; .
+	ld	hl, #.tm7Tdot
+	ld 	b, #0x0e		; v00 00 -> v00.00
+	call	putstrB
+
+	; finish up
 	pop	af
 	add	a, #2			; go to the next one
 	cp	#(FTASKS)
@@ -834,7 +877,7 @@ tm_scr7:
 .tm7free:
 	ld	hl, #.tm7Tfree
 	ld	a, e
-	ld	b, #0x18
+	ld	b, #0x17
 	call	putstrB
 	ret
 	
@@ -849,6 +892,14 @@ tm_scr7:
 .tm7Tname:
 	.byte	4
 	.ascii	"Name"
+
+.tm7Tdot:
+	.byte	1
+	.ascii	"."
+
+.tm7Tver:
+	.byte	1
+	.ascii	"v"
 
 .tm7Tcreds:
 	.byte	4

@@ -11,6 +11,8 @@
 ; The module scanner block
 absurdTask:
 	.word	ab_title	; title text
+	.byte	0x00		; version major
+	.byte	0x06		; version minor
 	.word	ab_desc1	; description line 1
 	.word	ab_desc2	; description line 2
 	.word	ab_att0		; attract sequence init

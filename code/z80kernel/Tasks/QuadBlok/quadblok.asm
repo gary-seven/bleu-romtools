@@ -32,6 +32,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 quadblokTask: 			; task structure
         .word   qb_title        ; title text
+	.byte	0x01		; version major
+	.byte	0x00		; version minor
         .word   qb_desc1        ; description line 1
         .word   qb_desc2        ; description line 2
         .word   qb_att0         ; attract sequence init

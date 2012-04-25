@@ -7,8 +7,12 @@
 
 
 # main definitions
-VERSION	:= 0.05
-VERS    := 005
+VERSION	:= 0.07
+VERS    := 007
+
+# 0.07 has updates for version numbers for tasks
+# 0.06 was a mid-version 2012 for Ludum Dare 23
+# 0.05 was stagnant for years
 
 # ROMSET can be mspac2 or mspacmab
 ROMSET	:= mspac2
@@ -54,7 +58,9 @@ TESTMODE := \
 EXAMPLE := \
 		Tasks/Example/example.asm
 	
-TASKS   := 	$(ABSURD) \
+TASKS   := 	Tasks/tasklist.asm\
+		\
+		$(ABSURD) \
 		$(QUADBLOK) \
 		$(SCREENSAVER) \
 		$(TESTMODE) \
@@ -73,7 +79,7 @@ ASMS 	:=	\
                 \
                 Core/core.asm           \
 		version.asm		\
-		Tasks/tasklist.asm	\
+		Core/tasks.asm		\
 		Core/dips.asm		\
 		Core/input.asm		\
                 Core/memset.asm         \

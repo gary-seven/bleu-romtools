@@ -12,6 +12,8 @@
 
 movieTask:
         .word   mp_title        ; title text
+	.byte	0x01		; version major
+	.byte	0x00		; version minor
         .word   mp_desc1        ; description line 1
         .word   mp_desc2        ; description line 2
         .word   mp_att0         ; attract sequence init

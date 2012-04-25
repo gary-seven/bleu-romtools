@@ -296,11 +296,13 @@ putstrC::
 ;	e:  color
 ;	bc: offset XY
 prtXYbyteB:
+	push	bc
 	call	xy2offsB
 	push	hl
 	pop	bc
 	ld	d, a
 	call	prtBCDbyte
+	pop	bc
 	ret
 
 ;; prtBCDbyte
