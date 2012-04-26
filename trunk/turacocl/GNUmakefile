@@ -28,7 +28,7 @@ ARCH ?= NetBSD-CMD
 # build configurations
 
 # do we want to include ImageMagick support
-USE_MAGICK := YES
+USE_MAGICK := NO
 
 # NOTE: This is left as configurable for the builder since it may
 #       not be available on the host system, or the builder may not
@@ -39,7 +39,7 @@ USE_MAGICK := YES
 ##########################################################
 # dos-switching stuff...  (automagic!)
 
-CURSES := YES
+CURSES := NO
 
 ifeq ($(ARCH),MSDOS)
 TARGET  := $(NAME).exe
