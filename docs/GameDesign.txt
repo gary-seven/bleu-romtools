@@ -15,7 +15,7 @@
 
 
           The most recent version of this document can be found at:
-                   http://umlautllama.com/projects/pacdocs/
+		    http://code.google.com/p/bleu-romtools/
 
 ========================================
                              GAME DESIGN
