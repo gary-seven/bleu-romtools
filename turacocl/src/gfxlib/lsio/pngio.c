@@ -22,6 +22,14 @@ extern TuracoInstance * ti;
 
 #include <wand/MagickWand.h>
 
+#ifdef USE_GRAPHICSMAGICK
+#include <wand/wand_api.h>
+#include <wand/pixel_wand.h>
+#include <wand/magick_wand.h>
+#include <wand/drawing_wand.h>
+#define MagickBooleanType int
+#endif
+
 /* 
 	this started out as an interface that used libPNG, but
 	after gouging my eyes out with spoons, I realized that
@@ -29,7 +37,16 @@ extern TuracoInstance * ti;
 	So i decided instead to use ImageMagick which provides
 	more file type support, but I'm only using PNG. 
 
-	it should not be difficult to extend this code to add
+	Although, now that I'm stuck on adding a
+	colormap to the imagemagick side of
+	things, I'm starting to think
+	that the original task
+	might have been a
+	better way to
+	go.  Oh
+	well.
+
+	It should not be difficult to extend this code to add
 	in support for more formats.  Later.
 */
 
@@ -122,6 +139,12 @@ PNG_Load (
 
 
 
+
+/*
+#define logprintf( ... ) printf( __VA_ARGS__ )
+*/
+#define logprintf( ... )
+
 void
 PNG_Save (
 	char * filename,  	/* filename to save out to */
@@ -131,6 +154,7 @@ PNG_Save (
 {
 	FILE * fp = NULL;
 	int width, height;
+palette = NULL;
 
 	if( tosave == NULL ) {
 		fprintf( stderr, "Nothing to save.\n" );
@@ -169,45 +193,68 @@ PNG_Save (
 		image_wand = NewMagickWand();
 
 		aColor = NewPixelWand();
-	    	PixelSetColor( aColor, "black" );
+		if( palette ) {
+			/* thought maybe this would trigger it to be paletted */
+			/* nope. */
+			PixelSetIndex( aColor, 0 );
+		} else {
+	    		PixelSetColor( aColor, "black" );
+		}
+
+		/* attempt to figure out how to get it to be paletted.  grr */
+		status = MagickSetDepth( image_wand, 8 );
+		logprintf( "MagickSetDepth %s\n", status?"TRUE":"false" );
 
 		/* create our image */
 		status = MagickNewImage( image_wand, (int)width, (int)height, aColor );
-		printf( "MagickNewImage %s\n", status?"TRUE":"false" );
+		logprintf( "MagickNewImage %s\n", status?"TRUE":"false" );
 
 		status = MagickSetImageColorspace( image_wand, RGBColorspace );
-		printf( "MagickSetImageColorspace %s\n", status?"TRUE":"false" );
+		logprintf( "MagickSetImageColorspace %s\n", status?"TRUE":"false" );
 		status = MagickSetImageDepth( image_wand, 8 );
-		printf( "MagickSetImageDepth %s\n", status?"TRUE":"false" );
+		logprintf( "MagickSetImageDepth %s\n", status?"TRUE":"false" );
 		status = MagickSetImageChannelDepth( image_wand, AllChannels, 8 );
-		printf( "MagickSetImageChannelDepth %s\n", status?"TRUE":"false" );
+		logprintf( "MagickSetImageChannelDepth %s\n", status?"TRUE":"false" );
+
 
 		/* set the appropriate image format */
 		if( palette ) {
 			status = MagickSetImageFormat( image_wand, "PNG8" );
-			printf( "MagickSetImageFormat %s\n", status?"TRUE":"false" );
+			logprintf( "MagickSetImageFormat %s\n", status?"TRUE":"false" );
 			if( ti->up->trn ) {
+				status = MagickSetType( image_wand, PaletteMatteType );
+				logprintf( "MagickSetType PaletteMatteType %s\n", status?"TRUE":"false" );
 			    	status = MagickSetImageType( image_wand, PaletteMatteType );
-				printf( "MagickSetImageType PaletteMatteType %s\n", status?"TRUE":"false" );
+				logprintf( "MagickSetImageType PaletteMatteType %s\n", status?"TRUE":"false" );
 			} else {
+				status = MagickSetType( image_wand, PaletteMatteType );
+				logprintf( "MagickSetType PaletteType %s\n", status?"TRUE":"false" );
 				status = MagickSetImageType( image_wand, PaletteType );
-				printf( "MagickSetImageType PaletteType %s\n", status?"TRUE":"false" );
+				logprintf( "MagickSetImageType PaletteType %s\n", status?"TRUE":"false" );
 			}
 		} else {
 			status = MagickSetImageFormat( image_wand, "PNG32" );
-			printf( "MagickSetImageFormat %s\n", status?"TRUE":"false" );
+			logprintf( "MagickSetImageFormat %s\n", status?"TRUE":"false" );
 			if( ti->up->trn ) {
+				status = MagickSetType( image_wand, TrueColorMatteType );
+				logprintf( "MagickSetType TrueColorMatteType %s\n", status?"TRUE":"false" );
 				status = MagickSetImageType( image_wand, TrueColorMatteType );
-				printf( "MagickSetImageType TrueColorMatteType %s\n", status?"TRUE":"false" );
+				logprintf( "MagickSetImageType TrueColorMatteType %s\n", status?"TRUE":"false" );
 			} else {
+				status = MagickSetType( image_wand, TrueColorType );
+				logprintf( "MagickSetType TrueColorType %s\n", status?"TRUE":"false" );
 				status = MagickSetImageType( image_wand, TrueColorType );
-				printf( "MagickSetImageType TrueColorType %s\n", status?"TRUE":"false" );
+				logprintf( "MagickSetImageType TrueColorType %s\n", status?"TRUE":"false" );
 			}
 		}
-		printf( "MagickSetImageType %s\n", status?"TRUE":"false" );
 
 		/* set up the palette */
 		if( palette ) {
+			/* 
+			status = AllocateImageColormap( GetImageFromMagickWand(image_wand), 255 );
+			logprintf( "AllocateImageColormap %s\n", status?"TRUE":"false" );
+			*/
+
 			int cmapidx = 0;
 			for( y=0 ; y<palette->height ; y++ )
 			{
@@ -225,7 +272,7 @@ PNG_Save (
 					/*PixelSetIndex( aColor, cmapidx ); */
 					status = MagickSetImageColormapColor( image_wand, cmapidx, pw );
 
-					printf( "%s %d: %d %d %d\n", status==MagickTrue?"OK":"BAD", cmapidx, r, g, b );
+					logprintf( "%s %d: %d %d %d\n", status==MagickTrue?"OK":"BAD", cmapidx, r, g, b );
 					cmapidx++;
 					DestroyPixelWand( pw );
 				}
@@ -245,10 +292,10 @@ PNG_Save (
 				for( x=0 ; x<nw ; x++ )
 				{
 					int dpos = (y * width) + x;
+					int idx = tosave->data[dpos].a; /* A contains index */
 					int r = tosave->data[dpos].r;
 					int g = tosave->data[dpos].g;
 					int b = tosave->data[dpos].b;
-					int idx = tosave->data[dpos].a; /* A contains index */
 
 					if( palette ) {
 						PixelSetIndex( pixels[x], idx );
@@ -320,7 +367,7 @@ PNG_Query(
 )
 {
 	/* XXXXX For now, let's just go truecolor, until i can fix PNG8 */
-    /* return( QUERY_PALETTED ); */
+    /* return( QUERY_PALETTED );  */
     return( QUERY_TRUECOLOR );
 }
 

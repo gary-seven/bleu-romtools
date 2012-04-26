@@ -67,6 +67,9 @@ Date		Number	Status	Description
 				driver env-var set, it should still work
 				Fixed 2008-02
 
-2009/11/10	17	Open	PNG8 Export is not working, while PNG32 is.
+2009/11/09	17	Open	PNG8 Export is not working, while PNG32 is.
 
-2009/11/10	18	Open	PNG8 Import is not tested, and probably faulty.
+2009/11/09	18	Open	PNG8 Import is not tested, and probably faulty.
+
+2008/11/11	19	Open	Switch from ImageMagick to libGD
+				for png,gif,jpg export/import
