@@ -32,16 +32,18 @@ ROMSDIR := ~/sw/share/roms
 #
 #	shtron		tron		shtron.orig
 #	dmtron		tron		dmtron.orig
+#
+#	stripped	puckman		puckman.orig
 
 # define these four based on the above table.
 # the .asm file
-TARGET  := fast
+TARGET  := stripped
 # the source graphics
-GFXSET  := mspacmab
+GFXSET  := puckman
 # the source romset
-SRCSET	:= mspacmab
+SRCSET	:= puckman
 # the destination romset
-ROMSET	:= mspacmab
+ROMSET	:= puckman
 
 
 # GFXSET:
@@ -96,11 +98,14 @@ roms:	$(IHX)
 # test: generate the roms, try them in MAME
 # NOTE: we shouldn't need 'clean' in here, but my makefile skillz suck, so
 #       we eat the extra 1.1 seconds required to rebuild the romset
-test:	clean roms
+
+test:	mametest
+
+idetest:	clean roms
 	-cp mspac2/* /Users/sdl/src/cvs/llemonide/mspac2
 	-cd /Users/sdl/src/cvs/llemonide; make test
 	
-oldtest: clean roms
+mametest: clean roms
 	$(XMAME) $(XMAMEARGS) $(ROMSET)
 
 debug:	clean roms
