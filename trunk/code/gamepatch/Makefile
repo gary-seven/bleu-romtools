@@ -34,10 +34,11 @@ ROMSDIR := ~/sw/share/roms
 #	dmtron		tron		dmtron.orig
 #
 #	stripped	puckman		puckman.orig
+#	hello		any		any
 
 # define these four based on the above table.
 # the .asm file
-TARGET  := stripped
+TARGET  := hello
 # the source graphics
 GFXSET  := puckman
 # the source romset
@@ -64,8 +65,9 @@ MAKE	:= make
 GENROMS := genroms
 TURACO	:= turacocl
 XMAME	:= xmame
-XMAMED	:= xmamed.x11
-XMAMEARGS := -snapshot_directory . -rompath . -cheat
+XMAMED	:= xmamed
+XMAMEARGS := -snapshot_directory . -rompath . -cheat -scale 2 -nomitshm
+XMAMEDARGS := $(XMAMEARGS) -debug -nr -ds 640x480 
 
 # the target.asm file
 ASM 	:= $(TARGET).asm
@@ -109,7 +111,7 @@ mametest: clean roms
 	$(XMAME) $(XMAMEARGS) $(ROMSET)
 
 debug:	clean roms
-	$(XMAMED) $(XMAMEARGS) -debug $(ROMSET)
+	$(XMAMED) $(XMAMEDARGS) $(ROMSET)
 
 ################################################################################
 # figure out a better way to do this later
