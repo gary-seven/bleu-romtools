@@ -190,6 +190,7 @@ asmbl()
 	char fn[FILSPC];
 	char *p;
 	int d, n, uaf, uf;
+	int cnt;
 
 	laddr = dot.s_addr;
 	lmode = SLIST;
@@ -525,16 +526,28 @@ loop:
 		}
 		expr( &e2, 0 );
 
-		outrb(&e1, R_NORM);
-		outrb(&e1, R_NORM);
-		outrb(&e1, R_NORM);
-		outrb(&e1, R_NORM);
+		cnt = e2.e_addr;
+		while( cnt > 0 ) {
+			outrb(&e1, R_NORM);
+			cnt --;
+		}
 		break;
 
 	case S_FILL:
 		/* 1.50d  Scott Lawrence  yorgle@gmail.com */
 		/* .REPEAT <VALUE>,<ENDADDRESS> */
-		err('q');
+		expr( &e1, 0 );
+		c=getnb();
+		if( c != ',' ) {
+			unget(c);
+			err('q');
+		}
+		expr( &e2, 0 );
+
+		cnt = e2.e_addr;
+		while( dot.s_addr <= cnt ) {
+			outrb(&e1, R_NORM);
+		}
 		break;
 
 	case S_RADIX:
