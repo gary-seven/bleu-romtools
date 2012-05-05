@@ -9,11 +9,13 @@
  * Kent, Ohio  44240
  */
 
-#define	VERSION	"V01.50c"
+#define	VERSION	"V01.50d"
 /*
- *  1.50a	adds .bound directive
- *  1.50b	adds .pword directive
- *  1.50c	removes .pword directive
+ *  1.50a	adds .bound directive		Scott Lawrence
+ *  1.50b	adds .pword directive		Scott Lawrence
+ *  1.50c	removes .pword directive	Scott Lawrence
+ *  1.50d	Adds .repeat directive
+ *              Adds .fill directive		Scott Lawrence yorgle@gmail.com
  */
 
 /* DECUS C void definition */
@@ -176,6 +178,10 @@ struct	sym
 #define	S_ORG	24		/* .org */
 #define	S_MODUL	25		/* .module */
 #define	S_BOUND	26		/* .bound */
+#define S_REPEAT 27		/* .repeat */
+#define S_FILL  28		/* .fill */
+
+
 
 struct	tsym
 {
@@ -301,7 +307,7 @@ extern	VOID		usage();
 extern	int		endline();
 extern	int		get();
 extern	VOID		getid();
-extern	int		getline();
+extern	int		asgetline();
 extern	int		getmap();
 extern	int		getnb();
 extern	int		more();

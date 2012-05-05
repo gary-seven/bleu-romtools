@@ -297,7 +297,7 @@ extern	char		endline();
 extern	char		get();
 extern	VOID		getfid();
 extern	VOID		getid();
-extern	int		getline();
+extern	int		asgetline();
 extern	int		getmap();
 extern	char		getnb();
 extern	int		more();

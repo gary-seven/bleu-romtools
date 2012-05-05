@@ -147,7 +147,7 @@ char *argv[];
 		dot.s_area = &dca;
 		symp = &dot;
 		minit();
-		while (getline()) {
+		while (asgetline()) {
 			++line;
 			cp = cb;
 			cpt = cbt;
@@ -184,7 +184,7 @@ asmbl()
 	register struct tsym *tp;
 	register c;
 	struct area  *ap;
-	struct expr e1;
+	struct expr e1, e2;
 	char id[NCPS];
 	char opt[NCPS];
 	char fn[FILSPC];
@@ -506,10 +506,35 @@ loop:
 		break;
 
 	case S_BOUND:
+		/* 1.50c  Scott Lawrence  yorgle@gmail.com */
 		if( dot.s_addr > absexpr() ) {
 			err('z');
 		}
 		lmode = SLIST;
+		break;
+
+	case S_REPEAT:
+		/* 1.50d  Scott Lawrence  yorgle@gmail.com */
+		/* .REPEAT <VALUE>,<COUNT> */
+
+		expr( &e1, 0 );
+		c=getnb();
+		if( c != ',' ) {
+			unget(c);
+			err('q');
+		}
+		expr( &e2, 0 );
+
+		outrb(&e1, R_NORM);
+		outrb(&e1, R_NORM);
+		outrb(&e1, R_NORM);
+		outrb(&e1, R_NORM);
+		break;
+
+	case S_FILL:
+		/* 1.50d  Scott Lawrence  yorgle@gmail.com */
+		/* .REPEAT <VALUE>,<ENDADDRESS> */
+		err('q');
 		break;
 
 	case S_RADIX:
