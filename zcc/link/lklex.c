@@ -149,7 +149,7 @@ int d;
 }
 
 int
-getline()
+asgetline()
 {
 	register i, ftype;
 	register char *fid;

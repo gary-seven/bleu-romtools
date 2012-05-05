@@ -133,7 +133,7 @@ char *argv[];
 		hp = NULL;
 		radix = 10;
 
-		while (getline()) {
+		while (asgetline()) {
 			ip = ib;
 			link();
 		}

@@ -12,7 +12,9 @@
 #include <stdio.h>
 #include <setjmp.h>
 #include <string.h>
+#ifndef __APPLE__
 #include <alloc.h>
+#endif
 #include "asm.h"
 
 /*
