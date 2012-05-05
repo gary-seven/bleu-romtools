@@ -338,6 +338,13 @@ a0:	.word	0x00ff
 	.word	a0,a1,a2
 	.word	B,OVR
 
+	.org	0x2000
+	nop			; at memory address 2000
+
+	.repeat	0x42, 0x10	; repeats 42 for 0x10 bytes
+
+	.fill 	0x99, 0x2100	; fill the rest of the block to 2100 with 99
+
 abcdabcd::				; global symbol
 
 	.page
@@ -362,3 +369,4 @@ abcdabcd::				; global symbol
 ;   0 _CODE      size  145   flags 0
 ;   1 A          size   24   flags 4
 ;   2 B          size   4A   flags C
+
