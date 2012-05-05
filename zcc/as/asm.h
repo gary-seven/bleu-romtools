@@ -56,7 +56,7 @@
 #define NCPS	32		/* Chars. per symbol */
 #define	HUGE	1000		/* A huge number */
 #define NERR	3		/* Errors per line */
-#define NINPUT	128 		/* Input buffer size */
+#define NINPUT	128	 	/* Input buffer size */
 #define NCODE	(64*1024)	/* Listing code buffer size (128 originally) */
 #define NTITL	64		/* Title buffer size */
 #define	NSBTL	64		/* SubTitle buffer size */
