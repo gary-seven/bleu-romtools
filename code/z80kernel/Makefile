@@ -55,11 +55,15 @@ SCREENSAVER := \
 TESTMODE := \
 		Tasks/TestMode/testmode.asm
 
+MUXSPRITE := \
+		Tasks/MuxSprite/muxsprite.asm
+
 EXAMPLE := \
 		Tasks/Example/example.asm
 	
 TASKS   := 	Tasks/tasklist.asm\
 		\
+		$(MUXSPRITE) \
 		$(ABSURD) \
 		$(QUADBLOK) \
 		$(SCREENSAVER) \
@@ -138,7 +142,7 @@ test:	fullRomSet
 	@$(XMAME) $(XMAMEARGS) $(ROMSET)
 .PHONY: test
 
-testd:	fullRomSet
+debug:	fullRomSet
 	@echo - Mame Debug $(ROMSET)
 	@$(XMAMED) $(XMAMEDARGS) $(ROMSET)
 .PHONY: testd
