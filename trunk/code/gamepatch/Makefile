@@ -38,7 +38,7 @@ ROMSDIR := ~/sw/share/roms
 
 # define these four based on the above table.
 # the .asm file
-TARGET  := hello
+TARGET  := stripped
 # the source graphics
 GFXSET  := puckman
 # the source romset
