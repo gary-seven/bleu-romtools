@@ -12,6 +12,7 @@
 ; task list table
 ;	- this lists all of the tasks that the menu system provides
 tasklist:
+	.word	mspriteTask
 	.word	absurdTask
 	.word	movieTask
 	.word	quadblokTask
