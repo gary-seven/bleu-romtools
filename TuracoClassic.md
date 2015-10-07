@@ -1,0 +1,36 @@
+#The original MS-DOS version of the app
+
+
+# Introduction #
+
+Turaco was a GUI-based editor for graphics ROMs from old arcde machines
+with sprite-based hardware such as Pengo, Pac-Man, Rush'n Attack, and such.
+
+![http://bleu-romtools.googlecode.com/svn/wiki/trco_filesel.gif](http://bleu-romtools.googlecode.com/svn/wiki/trco_filesel.gif)
+
+It had the ability to load and save ROMs.
+
+![http://bleu-romtools.googlecode.com/svn/wiki/trco.gif](http://bleu-romtools.googlecode.com/svn/wiki/trco.gif)
+
+It also allowed for mouse-based editing of the rom.  You could select a
+sprite in the ROM, edit it, and use various graphics manipulations.
+
+![http://bleu-romtools.googlecode.com/svn/wiki/trco_anim.gif](http://bleu-romtools.googlecode.com/svn/wiki/trco_anim.gif)
+
+It also had the facilities to show you how an animation sequence
+will look within the target game.
+
+# Heritage #
+
+Turaco Classic was preceded by [AGE](AGE.md), and followed by [TuracoCL](TuracoCL.md).
+
+# Downloads #
+
+Turaco Classic is no longer supported or maintained, but the
+downloads tab above will bring you to a few MS-DOS downloads
+of two versions of the software.
+
+  * 0.6.3 is a working version of the application, and the last one made with integrated drivers. (no external driver files necessary)
+  * 0.7 is slightly updated and has external driver "INI" files, making it more easily expandable.
+
+**Note** The above shows graphical imagery that might be copyrighted by Namco, Midway or other companies, and is used above for illustrative purposes only.

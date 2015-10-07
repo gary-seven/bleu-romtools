@@ -1,0 +1,22 @@
+#ROM file builder
+
+# Introduction #
+
+[Genroms](Genroms.md) is a tool to build ROM image files to be burned out to actual
+ROM devices, or to be used in emulators.
+
+It takes in a ".roms" file which describes the memory architecture of the
+ROM space, as well as the filenames of the ROMs that are within that space.
+
+It also takes in an Intel Hex File (.IHX) which is a common format that many
+assemblers will generate.
+
+Genroms will start with either a ROMspace of zeroes, or from existing
+ROM content, then overlay the contents of the IHX data, and save
+out new ROM image files.  By allowing the overlay of existing source
+ROMs, you can generate easily maintainable, documentable, and
+reproducable patches for existing program ROMs.
+
+Since [Genroms](Genroms.md) is currently supported and maintained, you can
+download the source from the "Source" tab above.  Any issues, bugs,
+or suggestions can be logged via the "Issues" tab above.
