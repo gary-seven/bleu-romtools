@@ -16,7 +16,6 @@
 #define __FILEREQ_H__
 
 #include <sys/types.h>
-#include <sys/dirent.h>
 #include <dirent.h> /* for dirent, etc */
 #include "tmgui.h"  /* textmode gui */
 
