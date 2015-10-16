@@ -39,7 +39,7 @@ USE_MAGICK := NO
 ##########################################################
 # dos-switching stuff...  (automagic!)
 
-CURSES := NO
+CURSES := YES
 
 ifeq ($(ARCH),MSDOS)
 TARGET  := $(NAME).exe
@@ -90,7 +90,6 @@ endif
 ifeq ($(CURSES),YES)
 SRCS += src/gui/app.c \
 	src/gui/bits.c \
-	src/gui/filereq.c \
 	src/gui/menu.c \
 	src/gui/popup.c \
 	src/gui/status.c \
