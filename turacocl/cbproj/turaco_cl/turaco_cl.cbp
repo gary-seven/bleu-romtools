@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="turaco_cl" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/turaco_cl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/turaco_cl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c99" />
+			<Add option="-Wall" />
+			<Add option="-DLinux" />
+			<Add option="-DUSE_CURSES" />
+			<Add option="-DNCURSES" />
+			<Add option='-DBL_PNAME=\&apos;&quot;Turaco CL&quot;\&apos;' />
+			<Add option='-DBL_VERSION=\&apos;&quot;012&quot;\&apos;' />
+			<Add option='-DBL_DATE=\&apos;&quot;2009.11.05&quot;\&apos;' />
+			<Add directory="../../src/" />
+			<Add directory="../../src/gfxlib" />
+			<Add directory="../../src/gui" />
+			<Add directory="../../src/ini" />
+			<Add directory="../../src/gfxlib/lsio" />
+			<Add directory="../../src/game" />
+		</Compiler>
+		<Linker>
+			<Add library="libncurses" />
+		</Linker>
+		<Unit filename="../../src/errors.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/errors.h" />
+		<Unit filename="../../src/game/checker.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/game/checker.h" />
+		<Unit filename="../../src/game/coding.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/game/coding.h" />
+		<Unit filename="../../src/game/driver.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/game/driver.h" />
+		<Unit filename="../../src/game/romio.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/game/romio.h" />
+		<Unit filename="../../src/game/tilemap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/game/tilemap.h" />
+		<Unit filename="../../src/game/turaco.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/game/turaco.h" />
+		<Unit filename="../../src/gfxlib/color.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gfxlib/color.h" />
+		<Unit filename="../../src/gfxlib/endian.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gfxlib/endian.h" />
+		<Unit filename="../../src/gfxlib/font.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gfxlib/font.h" />
+		<Unit filename="../../src/gfxlib/gfxlib.h" />
+		<Unit filename="../../src/gfxlib/image.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gfxlib/image.h" />
+		<Unit filename="../../src/gfxlib/io_util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gfxlib/io_util.h" />
+		<Unit filename="../../src/gfxlib/ls.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gfxlib/ls.h" />
+		<Unit filename="../../src/gfxlib/lsio/pcxio.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gfxlib/lsio/pcxio.h" />
+		<Unit filename="../../src/gfxlib/lsio/pngio.c">
+			<Option compilerVar="CC" />
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="../../src/gfxlib/lsio/pngio.h" />
+		<Unit filename="../../src/gfxlib/lsio/ppmio.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gfxlib/lsio/ppmio.h" />
+		<Unit filename="../../src/gui/app.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gui/app.h" />
+		<Unit filename="../../src/gui/bits.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gui/bits.h" />
+		<Unit filename="../../src/gui/filereq.c">
+			<Option compilerVar="CC" />
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="../../src/gui/filereq.h" />
+		<Unit filename="../../src/gui/menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gui/menu.h" />
+		<Unit filename="../../src/gui/popup.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gui/status.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gui/status.h" />
+		<Unit filename="../../src/gui/test.c">
+			<Option compilerVar="CC" />
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="../../src/gui/tmgui.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gui/tmgui.h" />
+		<Unit filename="../../src/ini/ini.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/ini/ini.h" />
+		<Unit filename="../../src/ini/jstr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/ini/jstr.h" />
+		<Unit filename="../../src/locale.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/locale.h" />
+		<Unit filename="../../src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/misc.h" />
+		<Unit filename="../../src/params.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/params.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
