@@ -132,7 +132,7 @@
 #define MAXPATH (1024)
 
 /* turaco_Create
- * 
+ *
  *  set up an initial instance
  */
 TuracoInstance *
@@ -165,7 +165,7 @@ turaco_Create( void )
 
 
 /* turaco_Destroy
- * 
+ *
  *  get rid of an instance by freeing all of the alloc'd items.
  */
 void
@@ -271,7 +271,7 @@ turaco_ConfigureFilenames( TuracoInstance * ti )
 
 
 /* turaco_LoadDriver
- * 
+ *
  *  load the driver selected by the userParams
  *  returns [[0]] on success
  */
@@ -333,7 +333,7 @@ turaco_VerifyDriver( TuracoInstance *ti )
     }
     ti->up->bnk--;
 
-    if( (ti->up->pal < 1) || (ti->up->pal > ti->gd->ndecodes) )
+    if( (ti->up->pal < 1) || (ti->up->pal > ti->gd->npalettes) )
     {
 	fprintf( stderr, "ERROR: Palette out of range!\n");
 	return( ERR_PAL_OUT_OF_RANGE );
@@ -348,7 +348,7 @@ turaco_VerifyDriver( TuracoInstance *ti )
 	    fprintf( stderr, "ERROR: \"%s\" is a bad dir.\n", ti->up->rom);
 	    return( ERR_SRC_DIR_BAD );
 	}
- 
+
     }
 
     if( ti->up->rod )
@@ -396,7 +396,7 @@ turaco_VerifyDriver( TuracoInstance *ti )
 	/* if not found, print and return ERROR */
 	if( ti->up->tmsn < 0 )
 	{
-	    fprintf( stderr, 
+	    fprintf( stderr,
 			"ERROR: \"%s\" tileset not found.\n", ti->up->tms );
 
 	    if( ti->gd->nsets )
@@ -419,7 +419,7 @@ turaco_VerifyDriver( TuracoInstance *ti )
 	{
 	    if( !strlen( ti->gd->tileMaps[tm].fname ))
 	    {
-		fprintf( stderr, 
+		fprintf( stderr,
 			"ERROR: Missing \"fname\" in tilemap %d\n", tm+1 );
 		return( ERR_NAME_NOT_DEFINED );
 	    }
@@ -490,7 +490,7 @@ void turaco_OverlayTilemapImages( TuracoInstance * ti )
 	     ti->gd->tileSets[ ti->up->tmsn ].setnos[tm] >= 0 ;
 	     tm++)
 	{
-	    (void) tilemap_Load( ti, 
+	    (void) tilemap_Load( ti,
 		ti->gd->tileSets[ ti->up->tmsn ].setnos[tm]-1 );
 	}
     }
@@ -500,8 +500,8 @@ void turaco_OverlayTilemapImages( TuracoInstance * ti )
 
 
 /* turaco_SaveImages
- *  
- *  saves out the internal images 
+ *
+ *  saves out the internal images
  */
 int
 turaco_SaveImages( TuracoInstance * ti )
@@ -517,7 +517,7 @@ turaco_SaveImages( TuracoInstance * ti )
     if( !ti->colorKey )        return( ERR_NO_IMAGE );
 
     caps = LS_Query( ti->up->ff );
-    
+
     /* save the core graphics */
     LS_Save( ti->fn_bank, ti->loadedGraphics, ti->colorKey, ti->up->ff );
 
@@ -562,7 +562,7 @@ turaco_SaveImages( TuracoInstance * ti )
 	     ti->gd->tileSets[ ti->up->tmsn ].setnos[tm] >= 0 ;
 	     tm++)
 	{
-	    (void) tilemap_Save( ti, 
+	    (void) tilemap_Save( ti,
 		ti->gd->tileSets[ ti->up->tmsn ].setnos[tm]-1 );
 	}
     }
@@ -587,7 +587,7 @@ turaco_GenerateColorKeyFromDriver( TuracoInstance * ti )
     if( ti->colorKey )  Image_Destroy( ti->colorKey );
 
     /* create a new palette image */
-    ti->colorKey = Image_Create( 
+    ti->colorKey = Image_Create(
 			1, ti->gd->gamePalettes[ti->up->bnk].ncolors, 8 );
 
     for( x=0 ; x< ti->gd->gamePalettes[ti->up->bnk].ncolors ; x++)
@@ -596,7 +596,7 @@ turaco_GenerateColorKeyFromDriver( TuracoInstance * ti )
 	ti->colorKey->data[x].g = ti->gd->gamePalettes[ti->up->pal].p[x].g;
 	ti->colorKey->data[x].b = ti->gd->gamePalettes[ti->up->pal].p[x].b;
     }
-    
+
 
     return( ERR_NONE );
 }
@@ -611,15 +611,15 @@ turaco_PalettedToRGB( TuracoInstance * ti )
 {
     int x;
 
-    for( x=0 ; 
+    for( x=0 ;
 	 x< (ti->loadedGraphics->width * ti->loadedGraphics->height) ;
 	 x++ )
     {
-	ti->loadedGraphics->data[x].r = 
+	ti->loadedGraphics->data[x].r =
 	  ti->gd->gamePalettes[ti->up->pal].p[ti->loadedGraphics->data[x].a].r;
-	ti->loadedGraphics->data[x].g = 
+	ti->loadedGraphics->data[x].g =
 	  ti->gd->gamePalettes[ti->up->pal].p[ti->loadedGraphics->data[x].a].g;
-	ti->loadedGraphics->data[x].b = 
+	ti->loadedGraphics->data[x].b =
 	  ti->gd->gamePalettes[ti->up->pal].p[ti->loadedGraphics->data[x].a].b;
 	/* phew! */
     }
@@ -672,8 +672,8 @@ turaco_RGBToPaletted( TuracoInstance * ti )
     }
 
     /* now we need to iterate over each pixel in the image */
-    for ( i=0 ; 
-	  i< (ti->loadedGraphics->width * ti->loadedGraphics->height) ; 
+    for ( i=0 ;
+	  i< (ti->loadedGraphics->width * ti->loadedGraphics->height) ;
 	  i++ )
     {
 	/* make the muxedcolor */
@@ -683,24 +683,24 @@ turaco_RGBToPaletted( TuracoInstance * ti )
 
 	/* look it up and shove the value back into the alpha channel. */
 
-	ti->loadedGraphics->data[i].a = 
+	ti->loadedGraphics->data[i].a =
 		_turaco_PAL_Lookup( mypalette, ncolors, muxcolor );
     }
 }
 
 
 /* turaco_DecodeRom
- *         
+ *
  * takes in a [gfxDecode], and fabricates an [image] from the [romBuffer]
- * 
+ *
  * Range checking is assumed to have happened before this, therefore
  * there is no return value.
- *          
+ *
  * NOTE: This looks for the image data in the alpha channel of the IMAGE.
  *       It needs to be converted externally to load it properly
  */
 void
-turaco_DecodeRom(  
+turaco_DecodeRom(
 	TuracoInstance * ti,
         GfxDecode * gd,
         IMAGE * image,
@@ -757,14 +757,14 @@ turaco_DecodeImageFromRomBuffer( TuracoInstance * ti )
     tall = ti->gd->gfxDecodes[ti->up->bnk].nsprites / wide;
 
     /* JJJ Fix? for non-divisor widths. */
-    if( ((float)ti->gd->gfxDecodes[ti->up->bnk].nsprites / (float) wide ) 
+    if( ((float)ti->gd->gfxDecodes[ti->up->bnk].nsprites / (float) wide )
 		> tall)
     {
 	tall++;
     }
 
     /* create the new image structure */
-    ti->loadedGraphics = Image_Create( 
+    ti->loadedGraphics = Image_Create(
 		wide * ti->gd->gfxDecodes[ti->up->bnk].width,
 		tall * ti->gd->gfxDecodes[ti->up->bnk].height,
 		8 );
@@ -775,7 +775,7 @@ turaco_DecodeImageFromRomBuffer( TuracoInstance * ti )
 			ti->romBuffer, ti->romBufferSize );
 
     /* convert the palette into an RGB likeness */
-    turaco_PalettedToRGB( ti ); 
+    turaco_PalettedToRGB( ti );
 
     /* finally, generate the color key associated with the above */
     r = turaco_GenerateColorKeyFromDriver( ti );
@@ -784,18 +784,18 @@ turaco_DecodeImageFromRomBuffer( TuracoInstance * ti )
 }
 
 
-/* turaco_EncodeRom   
- *         
+/* turaco_EncodeRom
+ *
  * takes in a [gfxDecode], and Converts the [image] into the [romBuffer]
  *
  * Range checking is assumed to have happened before this, therefore
  * there is no return value.
  *
- * NOTE: This loads the image data into the alpha channel of the IMAGE.  
+ * NOTE: This loads the image data into the alpha channel of the IMAGE.
  *       It needs to be converted externally to save it properly
  */
-void        
-turaco_EncodeRom(   
+void
+turaco_EncodeRom(
 	TuracoInstance * ti,
         GfxDecode * gd,
         IMAGE * image,
@@ -803,7 +803,7 @@ turaco_EncodeRom(
         long bufsize )
 {
     int c;
-    int xoffs, yoffs;   
+    int xoffs, yoffs;
 
     for( c=0,xoffs=0,yoffs=0 ; c< gd->nsprites ; c++ )
     {
@@ -828,7 +828,7 @@ turaco_EncodeRom(
 
 /* turaco_EncodeRomBufferFromImage
  *
- *  generates the internal RomBuffer by encoding the internal IMAGE 
+ *  generates the internal RomBuffer by encoding the internal IMAGE
  */
 int
 turaco_EncodeRomBufferFromImage( TuracoInstance * ti )
@@ -839,9 +839,9 @@ turaco_EncodeRomBufferFromImage( TuracoInstance * ti )
 	turaco_RGBToPaletted( ti );
     }
 
-	    
+
     /* next reduce the nuber of colors in the paletted portion of the image */
-    /* BUG 15 fix */ 
+    /* BUG 15 fix */
     if( ti->up->ff != ff_PCX )
     {
 	Color_Reduce24( ti->loadedGraphics, ti->colorKey,
