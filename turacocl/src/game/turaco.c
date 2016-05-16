@@ -860,3 +860,10 @@ turaco_EncodeRomBufferFromImage( TuracoInstance * ti )
     return( ERR_NONE );
 }
 
+
+int
+turaco_LoadPalette( TuracoInstance * ti )
+{
+    games_MakePalette(ti->gd);
+    return 0;
+}

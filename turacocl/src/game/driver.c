@@ -146,14 +146,14 @@
 #define MAXPATH (1024)
 
 
-/* the heuristic for the palette scaler.  
+/* the heuristic for the palette scaler.
    if no values are brighter than this value, the palette is scaled brighter */
 #define BRIGHTNESS_HEURISTIC (240)
 
 
 /*
  * _find_file
- * 
+ *
  *  a small internal helper to find a specific [[filename]] starting at
  *  a certain [[path]].  If it finds it, it returns the complete path.
  *  if it doesn't find it, it returns a null, and [[path]] is unchanged
@@ -231,7 +231,7 @@ char * _find_file( char * path, char * filename )
  *   it puts the proper filename and path down in the buffer 'buf'
  *   if it was not found, buf[0] = NULL;
  */
-char * 
+char *
 game_FindDriver( UserParams * userParams, char * buf, int bufsize )
 {
     char dpath[MAXPATH];
@@ -325,9 +325,9 @@ game_ExtractName(
  *  loads in the driver defined with [[filename]].  You may need to find
  *   the complete path first using the above method.
  */
-GameDriver * 
+GameDriver *
 game_LoadDriver(
-	UserParams * userParams, 
+	UserParams * userParams,
 	char * filename
 )
 {
@@ -353,11 +353,11 @@ game_LoadDriver(
 	    gdp->driverName = strdup( userParams->drv );
 	} else if( ini_Query( isp, "General", "Name" ) )
 	{
-	    gdp->driverName = strdup( ini_Query( isp, "General", "Name" )); 
+	    gdp->driverName = strdup( ini_Query( isp, "General", "Name" ));
 	} else {
 
 	    /* there was no known game name, so we will yank
-	     *	it from the driver filename. 
+	     *	it from the driver filename.
 	     *	(for old drivers specified with -ini)
 	     */
 	    gdp->driverName = game_ExtractName( strdup( filename ));
@@ -369,7 +369,7 @@ game_LoadDriver(
 	    printf( "  Desc: %s\n", gdp->description );
 
 	gdp->ndecodes = ini_QueryInt( isp, "Layout", "GfxDecodes");
-	gdp->gfxDecodes = (GfxDecode *) malloc( gdp->ndecodes * 
+	gdp->gfxDecodes = (GfxDecode *) malloc( gdp->ndecodes *
 					sizeof( GfxDecode ) );
 
 	/* load in the graphics decode arrays */
@@ -406,19 +406,19 @@ game_LoadDriver(
 
 	    for( d=0 ; d< gdp->gfxDecodes[c].planes ; d++ )
 	    {
-		gdp->gfxDecodes[c].planeoffsets[d] = 
+		gdp->gfxDecodes[c].planeoffsets[d] =
 		    ini_QueryArrayInt( isp, buf, "planeoffsets", d );
 	    }
 
 	    for( d=0 ; d< gdp->gfxDecodes[c].width ; d++ )
 	    {
-		gdp->gfxDecodes[c].xoffset[d] = 
+		gdp->gfxDecodes[c].xoffset[d] =
 		    ini_QueryArrayInt( isp, buf, "xoffsets", d );
 	    }
 
 	    for( d=0 ; d< gdp->gfxDecodes[c].height ; d++ )
 	    {
-		gdp->gfxDecodes[c].yoffset[d] = 
+		gdp->gfxDecodes[c].yoffset[d] =
 		    ini_QueryArrayInt( isp, buf, "yoffsets", d );
 	    }
 	    gdp->gfxDecodes[c].charincrement =
@@ -444,7 +444,7 @@ game_LoadDriver(
 	{
 	    sprintf( buf, "Rom%d", c+1 );
 
-	    gdp->romFileDescs[c].offset = 
+	    gdp->romFileDescs[c].offset =
 		ini_QueryArrayInt( isp, "GraphicsRoms", buf, 0 );
 
 	    gdp->romFileDescs[c].size   =
@@ -475,7 +475,7 @@ game_LoadDriver(
 	{
 	    sprintf( buf, "Palette%d", c+1 );
 
-	    gdp->gamePalettes[c].ncolors = 
+	    gdp->gamePalettes[c].ncolors =
 		ini_QueryArrayInt( isp, "Palette", buf, 0 );
 
 	    for( d=0 ; d< gdp->gamePalettes[c].ncolors ; d++ )
@@ -504,7 +504,7 @@ game_LoadDriver(
 	    for( c=0 ; c<gdp->nsets ; c++ )
 	    {
 		sprintf( buf, "Set%d", c+1 );
-		strcpy( gdp->tileSets[c].name, 
+		strcpy( gdp->tileSets[c].name,
 			ini_QueryArrayString( isp, "Tilemap", buf, 0 ) );
 
 		/* now count up the number of sets and fill the list */
@@ -515,12 +515,12 @@ game_LoadDriver(
 		    {
 			break;
 		    }
-		    gdp->tileSets[c].setnos[d] = 
+		    gdp->tileSets[c].setnos[d] =
 			    ini_QueryArrayInt( isp, "Tilemap", buf, d+1 );
 		    d++;
 		}
 		/* terminate the list */
-		gdp->tileSets[c].setnos[d] = -1; 
+		gdp->tileSets[c].setnos[d] = -1;
 	    }
 	    gdp->ntilemaps = 0;
 	    gdp->tileMaps  = NULL;
@@ -533,7 +533,7 @@ game_LoadDriver(
 	}
 
 	/* now load the actual tilemap data */
-    
+
 	if( gdp->nsets > 0 )
 	{
 	    gdp->ntilemaps = ini_QueryInt( isp, "Tilemap", "Tilemaps" );
@@ -546,33 +546,33 @@ game_LoadDriver(
 	    for( c=0 ; c< gdp->ntilemaps ; c++ )
 	    {
 		sprintf( buf, "Tilemap%d", c+1 );
-	    
+
 		gdp->tileMaps[c].fname[0] = '\0';
 		gdp->tileMaps[c].name[0] = '\0';
 		gdp->tileMaps[c].credit[0] = '\0';
 		gdp->tileMaps[c].description[0] = '\0';
 
 		if( ini_Query( isp, buf, "FName" ) )
-		    strcpy( gdp->tileMaps[c].fname, 
+		    strcpy( gdp->tileMaps[c].fname,
 				ini_Query( isp, buf, "FName" ));
 
 		if( ini_Query( isp, buf, "Name" ) )
-		    strcpy( gdp->tileMaps[c].name, 
+		    strcpy( gdp->tileMaps[c].name,
 				ini_Query( isp, buf, "Name" ));
 
 		if( ini_Query( isp, buf, "Credit" ))
-		    strcpy( gdp->tileMaps[c].credit, 
+		    strcpy( gdp->tileMaps[c].credit,
 				ini_Query( isp, buf, "Credit" ));
 
 		if( ini_Query( isp, buf, "Description" ))
-		    strcpy( gdp->tileMaps[c].description, 
+		    strcpy( gdp->tileMaps[c].description,
 				ini_Query( isp, buf, "Description" ));
 
 		gdp->tileMaps[c].bank   = ini_QueryInt( isp, buf, "Bank" ) -1;
 		gdp->tileMaps[c].height = ini_QueryInt( isp, buf, "Height" );
 		gdp->tileMaps[c].width  =  ini_QueryInt( isp, buf, "Width" );
 
-		gdp->tileMaps[c].row = 
+		gdp->tileMaps[c].row =
 			    (int **)
 			    malloc( sizeof( int * ) * gdp->tileMaps[c].height );
 
@@ -580,7 +580,7 @@ game_LoadDriver(
 		for( d=0 ; d<gdp->tileMaps[c].height ; d++ )
 		{
 		    /* each row */
-		    gdp->tileMaps[c].row[d] = 
+		    gdp->tileMaps[c].row[d] =
 		    (int *) malloc( sizeof( int * ) * gdp->tileMaps[c].width );
 
 		    sprintf( buf2, "Row%d", d+1 );
@@ -599,7 +599,7 @@ game_LoadDriver(
 	return( NULL );
     }
 
-    /* some games use a palette of [0..63], which we 
+    /* some games use a palette of [0..63], which we
 	need to scale up to [0..255] for PCX file use */
     if( (maxpal < BRIGHTNESS_HEURISTIC) && (maxpal > 0) )
     {
@@ -754,7 +754,7 @@ void game_Dump( GameDriver * gd )
 	printf("    bank: %d\n", gd->tileMaps[c].bank+1 );
 	printf("   width: %d\n", gd->tileMaps[c].width );
 	printf("  height: %d\n", gd->tileMaps[c].height );
-	
+
 	for( d=0 ; d<gd->tileMaps[c].height ; d++ )
 	{
 	    /* print out each row */
@@ -770,3 +770,44 @@ void game_Dump( GameDriver * gd )
     }
 }
 
+/* game_MakePalette
+ *
+ * generate the palette from the PROM images
+ */
+void games_MakePalette(GameDriver * gdp)
+{
+    int c, d;
+    int maxpal = 1;
+    char buf[512];
+
+    /* load in the palettes */
+    /* first, count up the palettes */
+
+    gdp->npalettes = 128/4;
+
+    /* again, go through it, reading in the palette data */
+// GN: need a cmd line param to know if to malloc for INI palette or ROM palette.
+//	gdp->gamePalettes = (GamePalette *) malloc( gdp->npalettes *
+//					sizeof( GamePalette ));
+    for( c=0 ; c< gdp->npalettes ; c++ )
+    {
+        sprintf( buf, "Palette%d", c+1 );
+
+        gdp->gamePalettes[c].ncolors = 4; /* games has 2 bitplanes */
+
+
+        for( d=0 ; d< gdp->gamePalettes[c].ncolors ; d++ )
+        {
+            /*
+            		gdp->gamePalettes[c].p[d].a = 0;
+            		gdp->gamePalettes[c].p[d].r =
+            		gdp->gamePalettes[c].p[d].g =
+            		gdp->gamePalettes[c].p[d].b =
+
+            		maxpal = MAX( gdp->gamePalettes[c].p[d].r, maxpal );
+            		maxpal = MAX( gdp->gamePalettes[c].p[d].g, maxpal );
+            		maxpal = MAX( gdp->gamePalettes[c].p[d].b, maxpal );
+            */
+        }
+    }
+}

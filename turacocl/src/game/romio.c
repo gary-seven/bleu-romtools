@@ -58,23 +58,24 @@ char * _find_file( char * path, char * filename );
 
 
 /*
- * romio_FindROM    
+ * romio_FindROM
  *
  *   This recurses down $(DRIVERS) to find the driver named "drivername".
  *   it puts the proper filename and path down in the buffer 'buf'
  *   if it was not found, buf[0] = NULL;
- */          
+ */
 char *
 romio_FindROM( TuracoInstance * ti, char * buf, int bufsize, char * romname )
 {
     char dpath[MAXPATH];
     char * r;
 
+    if (buf)
+        buf[0] = '\0'; /* GN: make sure it's null, in case no file found */
+
     if( !buf || bufsize <= 0 || !ti->up )
     {
-        if (buf)
-            buf[0] = '\0';
-        return( buf );
+        return( buf ); // GN: why not just return 0?
     }
 
     /* check the selected directory */
@@ -102,14 +103,19 @@ romio_FindROM( TuracoInstance * ti, char * buf, int bufsize, char * romname )
     {
         strncpy( buf, r, MAXPATH );
     }
-    return( buf );
+    else
+    {
+        buf = 0; /* GN: nothing found, status to caller */
+    }
+
+    return( buf ); // GN: TODO: caller already has buf so why not return an int?
 }
 
 
 
 /* romio_LoadROMs
  *
- *  loads the ROM data as selected in the user params 
+ *  loads the ROM data as selected in the user params
  */
 int
 romio_LoadROMs( TuracoInstance * ti )
@@ -147,11 +153,11 @@ romio_LoadROMs( TuracoInstance * ti )
 	max = ti->gd->romFileDescs[c].offset + ti->gd->romFileDescs[c].size -1;
 
 	d = ti->up->bnk;
-	
+
 	min2 = ti->gd->gfxDecodes[d].startaddress;
-	max2 = min2 
-		+ ti->gd->gfxDecodes[d].nsprites 
-		* ti->gd->gfxDecodes[d].charincrement/8 
+	max2 = min2
+		+ ti->gd->gfxDecodes[d].nsprites
+		* ti->gd->gfxDecodes[d].charincrement/8
 		- 1;
 
 	/* if either min2 or maxw are within min-max, it is needed */
@@ -174,7 +180,7 @@ romio_LoadROMs( TuracoInstance * ti )
     ti->romBuffer = (char *) calloc( maxRomSpace, 1 );
     ti->romBufferSize = maxRomSpace;
     if( !ti->romBuffer )  return( ERR_NO_MEMORY );
-    
+
     /* zero the buffer */
     _setBuffer( ti->romBuffer, maxRomSpace );
 
@@ -183,7 +189,7 @@ romio_LoadROMs( TuracoInstance * ti )
     /* find the rom in the directory tree */
     if( ti->up->rom )
 	strncpy( buf, ti->up->rom, MAXPATH );
-    else 
+    else
 	strncpy( buf, ".", MAXPATH );
 
     /* load the roms themselves into the buffer */
@@ -191,7 +197,7 @@ romio_LoadROMs( TuracoInstance * ti )
     {
 	if( ti->gd->romFileDescs[c].needed )
 	{
-	    r = romio_FindROM( ti, buf, MAXPATH, 
+	    r = romio_FindROM( ti, buf, MAXPATH,
 				ti->gd->romFileDescs[c].filename );
 	    if ( r )
 	    {
@@ -207,7 +213,7 @@ romio_LoadROMs( TuracoInstance * ti )
 		if( statbuf.st_size != ti->gd->romFileDescs[c].size )
 		{
 		    fprintf( stderr, "Source file was not found or the wrong size.\n" );
-		    fprintf( stderr, "Was %d, expecting %d.\n", 
+		    fprintf( stderr, "Was %d, expecting %d.\n",
 				(int)statbuf.st_size,
 				(int)ti->gd->romFileDescs[c].size );
 		    fprintf( stderr, "Starting with a blank buffer..." );
@@ -218,7 +224,7 @@ romio_LoadROMs( TuracoInstance * ti )
 		    if( fileROM )
 		    {
 			/* starting position in the buffer to load into */
-			d = ti->gd->romFileDescs[c].offset; 
+			d = ti->gd->romFileDescs[c].offset;
 
 			/* read from the file into the buffer... */
 			do
@@ -234,6 +240,10 @@ romio_LoadROMs( TuracoInstance * ti )
 			fclose( fileROM );
 		    }
 		}
+	    }
+	    else
+	    {
+		    printf( " %10s: NOT FOUND\n", ti->gd->romFileDescs[c].filename );
 	    }
 	}
     }
@@ -269,11 +279,11 @@ romio_SaveROMs( TuracoInstance * ti, int format )
 	    /* save out each rom file */
 #ifdef MSDOS
 	    (void) sprintf( rpath,
-		    "%s/%s", 
+		    "%s/%s",
 		    ti->up->rod, ti->gd->romFileDescs[c].filename );
 #else
-	    (void) snprintf( rpath, MAXPATH, 
-		    "%s/%s", 
+	    (void) snprintf( rpath, MAXPATH,
+		    "%s/%s",
 		    ti->up->rod, ti->gd->romFileDescs[c].filename );
 #endif
 
@@ -283,9 +293,9 @@ romio_SaveROMs( TuracoInstance * ti, int format )
 	    {
 		if( format == ROM_FORMAT_BINARY )
 		{
-		    fwrite( 
-			ti->romBuffer+(ti->gd->romFileDescs[c].offset), 
-			ti->gd->romFileDescs[c].size, 
+		    fwrite(
+			ti->romBuffer+(ti->gd->romFileDescs[c].offset),
+			ti->gd->romFileDescs[c].size,
 			1, outfile);
 		} else {
 		    /* IHX http://www.8052.com/tutintel.phtml	 */

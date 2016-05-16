@@ -269,13 +269,13 @@ endif
 # build
 .c.o:
 	@echo Build $<
-	@$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 ##########################################################
 # link!
 $(TARGET):	$(OBJS)
-	@echo Link $@
-	@$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
+	echo Link $@
+	$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 
 ##########################################################
 # dependencies
