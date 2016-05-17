@@ -865,6 +865,6 @@ int
 turaco_LoadPalette( TuracoInstance * ti )
 {
     int offset = 4096  + 4096 + 4096; // d = ti->gd->romFileDescs[c].offset
-    games_MakePalette(ti->gd, &ti->romBuffer[offset] );
+    games_MakePalette(ti->gd, &ti->romBuffer[offset], ti->up->bnk );
     return 0;
 }

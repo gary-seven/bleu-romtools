@@ -772,139 +772,132 @@ void game_Dump( GameDriver * gd )
 
 
 
-struct tag_rgb{
- int r;
- int g;
- int b;
- };
+#define MAXPALETTE 256
 
 /* game_MakePalette
  *
  * generate the palette from the PROM images
  */
-void games_MakePalette(GameDriver * gdp, unsigned char *color_prom)
+void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
 {
-    int c, d;
-    int maxpal = 1;
-    char buf[512];
+    int c, d, i;
 
+    int pal_bank_sz = 0x10; // TODO: need parameter
+    int pal_offset = bank * pal_bank_sz; /* sprites colors map to upper half of palette
+                                          who knows what other games are like */
+    int bitplanes = 2; // TODO: parameter
+    int color_prom_sz = 32;  // TODO: need size of color prom parameter here
+    int total_colors = 32; // 32 * 4 = 128   TODO: parameter
 
+    PIXEL     rgb[MAXPALETTE];
 
-	int i;
-//	#define TOTAL_COLORS(gfxn) (Machine->gfx[gfxn]->total_colors * Machine->gfx[gfxn]->color_granularity)
-	#define TOTAL_COLORS(gfxn)  64
-//	#define COLOR(gfxn,offs) (colortable[Machine->drv->gfxdecodeinfo[gfxn].color_codes_start + offs])
+    /* lifted this decoder logic from MAME
+        TODO: parameters for resistor values ?  */
+    for (i = 0; i < color_prom_sz; i++)
+    {
+        int bit0,bit1,bit2;
+        /* ... indices in color tables are
+          inverted so values are stored in reverse index */
+        bit0 = (color_prom[31-i] >> 0) & 0x01;
+        bit1 = (color_prom[31-i] >> 1) & 0x01;
+        bit2 = (color_prom[31-i] >> 2) & 0x01;
+        rgb[i].r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+        bit0 = (color_prom[31-i] >> 3) & 0x01;
+        bit1 = (color_prom[31-i] >> 4) & 0x01;
+        bit2 = (color_prom[31-i] >> 5) & 0x01;
+        rgb[i].g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+        bit0 = 0;
+        bit1 = (color_prom[31-i] >> 6) & 0x01;
+        bit2 = (color_prom[31-i] >> 7) & 0x01;
+        rgb[i].b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-    struct tag_rgb rgb[32];
+        printf(".db 0x%02X, 0x%02X, 0x%02X ; (0x%02X) %X\n",
+                    rgb[i].r, rgb[i].g, rgb[i].b, color_prom[31-i], i);
+    }
 
-	for (i = 0;i < 32;i++)
-	{
-		int bit0,bit1,bit2,r,g,b;
+    color_prom += color_prom_sz;
 
-		bit0 = (color_prom[31-i] >> 0) & 0x01;
-		bit1 = (color_prom[31-i] >> 1) & 0x01;
-		bit2 = (color_prom[31-i] >> 2) & 0x01;
-		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		bit0 = (color_prom[31-i] >> 3) & 0x01;
-		bit1 = (color_prom[31-i] >> 4) & 0x01;
-		bit2 = (color_prom[31-i] >> 5) & 0x01;
-		g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		bit0 = 0;
-		bit1 = (color_prom[31-i] >> 6) & 0x01;
-		bit2 = (color_prom[31-i] >> 7) & 0x01;
-		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-//		palette_set_color(i,r,g,b);
-  /* indices in color tables are inverted so values are stored in reverse index */
+    color_prom += bank * 256; // Only the first 128 bytes are used TODO: CLUT PROM size
 
-		rgb[i].r = r;
-		rgb[i].g = g;
-		rgb[i].b = b;
- //printf(".db 0x%02X, 0x%02X, 0x%02X ; (0x%02X) %X\n", r, g, b, color_prom[31-i], i);
-		printf(".db 0x%02X, 0x%02X, 0x%02X ; (0x%02X) %X\n", rgb[i].r, rgb[i].g, rgb[i].b, color_prom[31-i], i);
-	}
-
-	color_prom += 32;
-
-	/* characters */
-//	for (i = 0;i < TOTAL_COLORS(0);i++)
-//		COLOR(0,i) = 15 - (*(color_prom++) & 0x0f);
-	color_prom += 128; // tmp
-
-	color_prom += 128;
-
-	/* sprites */
-
+#if 0
     printf("\n; sprites\n");
-	for (i = 0;i < TOTAL_COLORS(1);i+=4)
-	{
-	    int p, r, g, b;
-		printf("Palette%d = 4  ", i/4 + 1);
-		/* use the make pen function to get rgb triplet for each one */
+    for (i = 0; i < TOTAL_COLORS(1); i+=4)
+    {
+        int p, r, g, b;
+        printf("Palette%d = 4  ", i/4 + 1);
 
         /* offset $10 to second "bank" */
         int scale = 1;
         p = 15 - (color_prom[i + 0] & 0x0f) + 0x10;
-        r = rgb[p].r / scale; g = rgb[p].g / scale; b = rgb[p].b / scale;
-		printf("%02d %02d %02d  ", r, g, b);
+        r = rgb[p].r / scale;
+        g = rgb[p].g / scale;
+        b = rgb[p].b / scale;
+        printf("%02d %02d %02d  ", r, g, b);
         /* 1 & 2 swapped as per turaco palette spec */
         p = 15 - (color_prom[i + 2] & 0x0f) + 0x10;
-        r = rgb[p].r / scale; g = rgb[p].g / scale; b = rgb[p].b / scale;
-		printf("%02d %02d %02d  ", r, g, b);
+        r = rgb[p].r / scale;
+        g = rgb[p].g / scale;
+        b = rgb[p].b / scale;
+        printf("%02d %02d %02d  ", r, g, b);
 
         p = 15 - (color_prom[i + 1] & 0x0f) + 0x10;
-        r = rgb[p].r / scale; g = rgb[p].g / scale; b = rgb[p].b / scale;
-		printf("%02d %02d %02d  ", r, g, b);
+        r = rgb[p].r / scale;
+        g = rgb[p].g / scale;
+        b = rgb[p].b / scale;
+        printf("%02d %02d %02d  ", r, g, b);
 
         p = 15 - (color_prom[i + 3] & 0x0f) + 0x10;
-        r = rgb[p].r / scale; g = rgb[p].g / scale; b = rgb[p].b / scale;
-		printf("%02d %02d %02d  ", r, g, b);
+        r = rgb[p].r / scale;
+        g = rgb[p].g / scale;
+        b = rgb[p].b / scale;
+        printf("%02d %02d %02d  ", r, g, b);
 
-		printf(" # (%d) ", i/4);
-		// normalized CLUT values (1 & 2 swapped as per turaco palette spec)
-//        p = 15 - (color_prom[i + 0] & 0x0f) + 0x10;
+        printf(" # (%d) ", i/4);
+        // normalized CLUT values (1 & 2 swapped as per turaco palette spec)
         printf("0x%02X , ",  15 - (color_prom[i + 0] & 0x0f) + 0x10);
         printf("0x%02X , ",  15 - (color_prom[i + 2] & 0x0f) + 0x10);
         printf("0x%02X , ",  15 - (color_prom[i + 1] & 0x0f) + 0x10);
         printf("0x%02X , ",  15 - (color_prom[i + 3] & 0x0f) + 0x10);
-		// "raw" prom'd values for comparison
+        // "raw" prom'd values for comparison
         printf("  [ ");
-		printf("0x%02X , ",  (color_prom[i + 0] & 0x0f));
-		printf("0x%02X , ",  (color_prom[i + 1] & 0x0f));
-		printf("0x%02X , ",  (color_prom[i + 2] & 0x0f));
-		printf("0x%02X , ",  (color_prom[i + 3] & 0x0f));
-		printf(" ]\n");
-	}
+        printf("0x%02X , ",  (color_prom[i + 0] & 0x0f));
+        printf("0x%02X , ",  (color_prom[i + 1] & 0x0f));
+        printf("0x%02X , ",  (color_prom[i + 2] & 0x0f));
+        printf("0x%02X , ",  (color_prom[i + 3] & 0x0f));
+        printf(" ]\n");
+    }
+#endif
 
+    gdp->npalettes = total_colors; // 128/4;
 
+// For now, gamePalettes is already allocated during driver loading.
 
-    /* load in the palettes */
-    /* first, count up the palettes */
+    int pal_order[4] =  // Turaco order may not be same as in PROM
+    { 0, 2, 1, 3 };
 
-    gdp->npalettes = 128/4;
-
-    /* again, go through it, reading in the palette data */
-// GN: need a cmd line param to know if to malloc for INI palette or ROM palette.
-//	gdp->gamePalettes = (GamePalette *) malloc( gdp->npalettes *
-//					sizeof( GamePalette ));
     for( c=0 ; c< gdp->npalettes ; c++ )
     {
-        sprintf( buf, "Palette%d", c+1 );
-
-        gdp->gamePalettes[c].ncolors = 4; /* games has 2 bitplanes */
-
+        gdp->gamePalettes[c].ncolors = bitplanes * 2; /* game has 2 bitplanes */
 
         for( d=0 ; d< gdp->gamePalettes[c].ncolors ; d++ )
         {
-            /*
-            		gdp->gamePalettes[c].p[d].a = 0;
-            		gdp->gamePalettes[c].p[d].r =
-            		gdp->gamePalettes[c].p[d].g =
-            		gdp->gamePalettes[c].p[d].b =
+            int p = pal_order[d];
+            int n =  15 - (color_prom[c + p] & 0x0f) + pal_offset;
 
-            		maxpal = MAX( gdp->gamePalettes[c].p[d].r, maxpal );
-            		maxpal = MAX( gdp->gamePalettes[c].p[d].g, maxpal );
-            		maxpal = MAX( gdp->gamePalettes[c].p[d].b, maxpal );
-            */
+            gdp->gamePalettes[c].p[d].a = 0;
+            if ( d == 0)
+            {
+                gdp->gamePalettes[c].p[d].r = 0;
+                gdp->gamePalettes[c].p[d].g = 0;
+                gdp->gamePalettes[c].p[d].b = 0;
+            }
+            else
+            {
+                gdp->gamePalettes[c].p[d].r = rgb[n].r;
+                gdp->gamePalettes[c].p[d].g = rgb[n].g;
+                gdp->gamePalettes[c].p[d].b = rgb[n].b;
+            }
         }
     }
 }
+
