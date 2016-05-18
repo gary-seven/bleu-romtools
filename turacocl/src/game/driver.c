@@ -782,12 +782,12 @@ void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
 {
     int c, d, i;
 
-    int pal_bank_sz = 0x10; // TODO: need parameter
+    int pal_bank_sz = 32 / 2; // each bank has own set of colors TODO: parameter
     int pal_offset = bank * pal_bank_sz; /* sprites colors map to upper half of palette
                                           who knows what other games are like */
     int bitplanes = 2; // TODO: parameter
     int color_prom_sz = 32;  // TODO: need size of color prom parameter here
-    int total_colors = 32; // 32 * 4 = 128   TODO: parameter
+    int total_colors = 32; // 128/(bitplanes<<1)   TODO: parameter
 
     PIXEL     rgb[MAXPALETTE];
 
@@ -810,18 +810,20 @@ void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
         bit1 = (color_prom[31-i] >> 6) & 0x01;
         bit2 = (color_prom[31-i] >> 7) & 0x01;
         rgb[i].b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-
+#if 0
         printf(".db 0x%02X, 0x%02X, 0x%02X ; (0x%02X) %X\n",
                     rgb[i].r, rgb[i].g, rgb[i].b, color_prom[31-i], i);
+#endif
     }
 
     color_prom += color_prom_sz;
 
     color_prom += bank * 256; // Only the first 128 bytes are used TODO: CLUT PROM size
 
-#if 0
+#if 1
+    /* dump the CLUT in turaco INI format */
     printf("\n; sprites\n");
-    for (i = 0; i < TOTAL_COLORS(1); i+=4)
+    for (i = 0; i < (total_colors*4); i+=4)
     {
         int p, r, g, b;
         printf("Palette%d = 4  ", i/4 + 1);
@@ -877,12 +879,13 @@ void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
 
     for( c=0 ; c< gdp->npalettes ; c++ )
     {
-        gdp->gamePalettes[c].ncolors = bitplanes * 2; /* game has 2 bitplanes */
+        gdp->gamePalettes[c].ncolors = bitplanes << 1; /* game has 2 bitplanes */
 
         for( d=0 ; d< gdp->gamePalettes[c].ncolors ; d++ )
         {
             int p = pal_order[d];
-            int n =  15 - (color_prom[c + p] & 0x0f) + pal_offset;
+            int i = c * gdp->gamePalettes[c].ncolors;
+            int n =  15 - (color_prom[i + p] & 0x0f) + pal_offset;
 
             gdp->gamePalettes[c].p[d].a = 0;
             if ( d == 0)
