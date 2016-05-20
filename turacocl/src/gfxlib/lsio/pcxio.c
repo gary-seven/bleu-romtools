@@ -1,7 +1,7 @@
 /*
  *  pcxio
  *
- *   simple save/loader for pcx images 
+ *   simple save/loader for pcx images
  *
  * $Id: pcx.c,v 1.13 2003/04/09 02:08:31 jerry Exp $
  *
@@ -57,7 +57,7 @@
  */
 
 /*
- * NOTE: 
+ * NOTE:
 
 	Some of the code in this .c file has been swiped from the
 	"ZSoft PCX File Format Technical Reference Manual", from
@@ -154,10 +154,10 @@ PCX_Dump(
     printf( "       Version: %d\n", pi->hdr.version );
     printf( "      Encoding: %d\n", pi->hdr.encoding );
     printf( "  BitsPerPixel: %d\n", pi->hdr.bitsPerPixel );
-    printf( "        Window: (%d %d)-(%d %d)\n", 
+    printf( "        Window: (%d %d)-(%d %d)\n",
 		    pi->hdr.xMin, pi->hdr.yMin, pi->hdr.xMax, pi->hdr.yMax );
 
-    printf( "                %d x %d\n", pi->width, pi->height ); 
+    printf( "                %d x %d\n", pi->width, pi->height );
 
     printf( "         H DPI: %d\n", pi->hdr.hDpi );
     printf( "         V DPI: %d\n", pi->hdr.vDpi );
@@ -189,7 +189,7 @@ PCX_Dump(
     {
 	if( d == 4 )
 	{
-	    d=0; 
+	    d=0;
 	    printf( "\n " );
 	}
 	printf( "   [%02x] ", c );
@@ -199,20 +199,20 @@ PCX_Dump(
 
     printf( "%6ld bytes\n", pi->bufrSize );
     printf( "%6d pixels\n", pi->width * pi->height );
-    
+
 }
 
 /*////////////////////////////////////////////////////////////////////////////*/
 
 
 
-/* 
+/*
  * PCX_encget
  *
- *  This procedure reads one encoded block from the image 
+ *  This procedure reads one encoded block from the image
  *  file and stores a count and data byte.
  */
-int 
+int
 PCX_encget(
 	int * pbyt,	/* where to place data */
 	int * pcnt,	/* where to place count */
@@ -247,7 +247,7 @@ PCX_encget(
 
 
 int
-PCX_LoadHeader( 
+PCX_LoadHeader(
 	PCX_Image * pi,
 	FILE * fp
 )
@@ -302,13 +302,13 @@ unsigned char PCX_defaultPalette[48] = {
 	0x80, 0x80, 0x00,    0x80, 0x80, 0x80,    0xc0, 0xc0, 0xc0,
 	0x00, 0x00, 0xff,    0x00, 0xff, 0x00,    0x00, 0xff, 0xff,
 	0xff, 0x00, 0x00,    0xff, 0x00, 0xff,    0xff, 0xff, 0x00,
-	0xff, 0xff, 0xff 
+	0xff, 0xff, 0xff
 };
 
 
 int
 PCX_LoadPalette(
-	PCX_Image * pi, 
+	PCX_Image * pi,
 	FILE * fp
 )
 {
@@ -367,14 +367,14 @@ PCX_LoadPalette(
 	pi->hdr.colormap[c*3 + 1] = pi->pal[c].g;
 	pi->hdr.colormap[c*3 + 2] = pi->pal[c].b;
     }
-    
+
     return( 0 );
 }
 
 
 int
 PCX_LoadDecodeData(
-	PCX_Image * pi, 
+	PCX_Image * pi,
 	FILE * fp
 )
 {
@@ -388,18 +388,18 @@ PCX_LoadDecodeData(
     /* first, we need to go to the right point in the file */
     fseek( fp, 128, SEEK_SET ); /* oh yeah. this is important */
 
-    /* Here's a program fragment using PCX_encget.  This reads an 
-	entire file and stores it in a (large) buffer, pointed 
-	to by the variable "bufr". "fp" is the file pointer for 
+    /* Here's a program fragment using PCX_encget.  This reads an
+	entire file and stores it in a (large) buffer, pointed
+	to by the variable "bufr". "fp" is the file pointer for
 	the image */
 
-    pi->bufrSize = (long )  pi->hdr.bytesPerLine 
-		   * pi->hdr.nplanes 
+    pi->bufrSize = (long )  pi->hdr.bytesPerLine
+		   * pi->hdr.nplanes
 		   * (1 + pi->hdr.yMax - pi->hdr.yMin);
 
     if( pi->bufr )  free( pi->bufr );
 
-    pi->bufr = (unsigned char *) malloc( 
+    pi->bufr = (unsigned char *) malloc(
 			sizeof( unsigned char ) * pi->bufrSize );
 
     bpos = pi->bufr;
@@ -421,9 +421,9 @@ PCX_LoadDecodeData(
 
 
 /* for the 24 bit demuxing */
-#define PLANE_RED   ( 0 ) 
-#define PLANE_GREEN ( 1 ) 
-#define PLANE_BLUE  ( 2 ) 
+#define PLANE_RED   ( 0 )
+#define PLANE_GREEN ( 1 )
+#define PLANE_BLUE  ( 2 )
 
 IMAGE *
 PCX_toImage(
@@ -531,6 +531,14 @@ PCX_Load(
 
     if( pi.bufr )  free( pi.bufr );
 
+    // GN:
+    int c;
+    printf("Image palette:\n");
+    for (c = 0; c < 16; c++) // this game only has 4 colors, for the 2 bit-planes
+    {
+      // each rgb triplet needs to be packed into the format of the color PROM
+      printf(".db %d,%d,%d, ; %d\n", pi.pal[c].r, pi.pal[c].g, pi.pal[c].b, c);
+    }
     return( i );
 }
 
@@ -541,8 +549,8 @@ PCX_Load(
 
 /* PCX_encput
  *
- *  Subroutine for writing an encoded byte pair (or single byte 
- *  if it doesn't encode) to a file. It returns the count of 
+ *  Subroutine for writing an encoded byte pair (or single byte
+ *  if it doesn't encode) to a file. It returns the count of
  * bytes written, 0 if error
 */
 int
@@ -577,7 +585,7 @@ PCX_encput(
 
 /* PCX_encLine
  *
- *  This subroutine encodes one scanline and writes it to a file.   
+ *  This subroutine encodes one scanline and writes it to a file.
  *  It returns number of bytes written into outBuff, 0 if failed.
 */
 int				/* number of bytes encoded */
@@ -594,7 +602,7 @@ PCX_encLine(
 
     total = 0;
     runCount = 1;
-    last = *(inBuff);       
+    last = *(inBuff);
 
     /*
 	 Find the pixel dimensions of the image by calculating
@@ -611,14 +619,14 @@ PCX_encLine(
 
 	    if( runCount == 63 )
 	    {
-		if( !(i = PCX_encput(last, runCount, fp)))   
+		if( !(i = PCX_encput(last, runCount, fp)))
 		    return (0);
 
 		total += i;
 		runCount = 0;
 	    }
 	}
-        else 	/* No "run"  -  this != last */ 
+        else 	/* No "run"  -  this != last */
 	{
 	    if (runCount)
 	    {
@@ -635,7 +643,7 @@ PCX_encLine(
 
     if (runCount)	/* finish up */
     {
-	if( !(i = PCX_encput(last, runCount, fp)))   
+	if( !(i = PCX_encput(last, runCount, fp)))
 	    return( 0 );
 
         return (total + i);
@@ -766,7 +774,7 @@ PCX_fromImage(
     memset( pi, 0, sizeof( PCX_Image ));
     pi->hdr.manufacturer = 0x0A;
     pi->hdr.version      = 5; /* we will always save the palette block */
-    pi->hdr.encoding     = 1; 
+    pi->hdr.encoding     = 1;
     pi->hdr.bitsPerPixel = tosave->bits;
     pi->hdr.xMin         = 0;
     pi->hdr.yMin         = 0;
@@ -803,11 +811,11 @@ PCX_fromImage(
 
 
     /* transfer over the image data */
-    pi->bufrSize = (long )  pi->hdr.bytesPerLine 
-		   * pi->hdr.nplanes 
+    pi->bufrSize = (long )  pi->hdr.bytesPerLine
+		   * pi->hdr.nplanes
 		   * (1 + pi->hdr.yMax - pi->hdr.yMin);
 
-    pi->bufr = (unsigned char *) malloc( 
+    pi->bufr = (unsigned char *) malloc(
 			sizeof( unsigned char ) * pi->bufrSize );
 
     c=0;
@@ -832,7 +840,7 @@ PCX_fromImage(
 
 void
 PCX_Save (
-	char * filename, 
+	char * filename,
 	IMAGE * tosave,
 	IMAGE * colorKey /* pointer to a palette, or null if truecolor */
 )
@@ -866,7 +874,7 @@ PCX_Save (
     }
 
     fclose( fp );
-    
+
 }
 
 
@@ -882,7 +890,7 @@ PCX_SupportedFile(
     FILE * fp;
 
     /* check to see if the magic cookie is in the file. */
-    /* that is to saym the first byte needs to be 0x0A, and the next 
+    /* that is to saym the first byte needs to be 0x0A, and the next
        needs to be 2, 3, or 5 */
 
     fp = fopen( filename, "r" );
@@ -899,7 +907,7 @@ PCX_SupportedFile(
 	}
     }
 
-    return( ff_UNKNOWN ); 
+    return( ff_UNKNOWN );
 }
 
 

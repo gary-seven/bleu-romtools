@@ -147,7 +147,7 @@ int main( int argc, char ** argv )
 		return( r );
 	}
 
-    turaco_LoadPalette( ti ); // games_MakePalette(ti->gd);
+    //turaco_LoadPalette( ti );
 
 	/* decode the rom into an image buffer */
 	/* this might be unnecessary */
@@ -201,7 +201,7 @@ int main( int argc, char ** argv )
 		return( r );
 	}
 
-    turaco_LoadPalette( ti ); // games_MakePalette(ti->gd);
+    turaco_LoadPalette( ti );
 
 	/* decode the rom into an image buffer */
 	r = turaco_DecodeImageFromRomBuffer( ti );

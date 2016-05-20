@@ -820,7 +820,7 @@ void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
 
     color_prom += bank * 256; // Only the first 128 bytes are used TODO: CLUT PROM size
 
-#if 1
+#if 0
     /* dump the CLUT in turaco INI format */
     printf("\n; sprites\n");
     for (i = 0; i < (total_colors*4); i+=4)
@@ -869,7 +869,7 @@ void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
         printf(" ]\n");
     }
 #endif
-
+total_colors =      gdp->npalettes ; // GN: tmp, this is malloc'd per nbr of palette INI entries
     gdp->npalettes = total_colors; // 128/4;
 
 // For now, gamePalettes is already allocated during driver loading.
