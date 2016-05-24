@@ -13,3 +13,50 @@ Future work:
     _ palette rom tools
 	- palette rom to PPM
 	- PPM to palette ROM
+
+GN:
+
+A CLUT is an array of palette structures, each of which
+ is comprised of 4 colors (2 bit-planes).
+Within a CLUT, individual RGB colors of a given palette element are 
+ represented by a 1-byte index into a separate palette PROM.
+The CLUT PROM provides 32 palettes for each of Bank 1 (characters) and 
+ Bank 2 (sprites). 
+The palette PROM provides 16 RGB colors (3-3-2) for each of Bank 1 (character tiles) 
+ and Bank 2 (sprite tiles) total of 32 palette elements.
+
+For each tile, a color attribute byte is stored, which is the index into the CLUT 
+ to be used. Hardware decodes from the CLUT to the 
+ palette PROM and then drives the circuitry of the RGB display.
+
+Upfront work is to generate a PCX with '-pal n' for entire range of 
+ color attributes used by both banks  e.g. :
+ 
+ turacocl  -inf ROM -bnk 1 -pal 1 -iod "gal_imgs" -dbf gal2_1.pcx   # etc. etc.
+
+-pal selects the color attribute (palette) by which the generated PCX 
+ image will derive the 4 colors of its palette. 
+
+   == ROM to IMG ==   (-inf ROM)
+	-dbf BankImageFile       Force this filename for the bank image
+
+
+ROMs are generated from images as follows, but it doesn't matter 
+which PCX is used, as the ROM data is irrespective of the image (but
+see below for idea of outputting palette colors ...). :
+ turacocl  -inf IMG -bnk 2 -pal 1 -img "gal_imgs" -??? gal2_${n}.pcx
+
+Use a shell script to do the following:
+
+For each PCX file:
+ turacocl  -inf IMG -bnk 2 -pal 1  -img "images"
+    (Turaco shall dump 4 colors of pcx palette to stdout )
+ For each rgb of palette,
+   Pack rgb  into 3-3-2 byte.
+   Search the 3-3-2 byte from color_prom.s (text in ASM format)
+     If 3-3-2 byte found in PROM,  index = found_index 
+     Else, 
+       Append 3-3-2 byte to color_prom.s
+       Index = appended_index
+   Append index of color onto CLUT entry.  
+  
