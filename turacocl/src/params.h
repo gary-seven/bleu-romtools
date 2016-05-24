@@ -20,6 +20,7 @@ typedef struct {
     int    pal;	/* palette number */
     char * key;	/* key file name */
     char * rom;	/* rom input directory */
+    char * img;	/* image input directory */
 
     FileFormat ff; /* which image format to use */
     char * ffs;    /* temporary location for the above, and extension */
@@ -33,6 +34,7 @@ typedef struct {
     char * dbf;	/* bank output IMG filename */
     char * chk;	/* checkerboard filename */
     int    wid;	/* number of sprites wide we're doing */
+    char * iod;	/* image output directory */
 
     /* tilemap */
     char * tms;  /* tilemap set name */
@@ -62,7 +64,7 @@ int params_IsDir( char * path );
 /* params_Parse
  *
  *  checks the environment variables and command line and
- *  sets the appropriate parameter options as such 
+ *  sets the appropriate parameter options as such
  *  This needs to be freed later.
  */
 UserParams *

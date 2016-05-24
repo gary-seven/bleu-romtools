@@ -17,7 +17,7 @@
 /* _params_NewUP
  *
  *  generates a new user params structure
- */ 
+ */
 UserParams *
 _params_NewUP( void )
 {
@@ -45,6 +45,7 @@ _params_NewUP( void )
 	pup->rod = NULL;
 
 	/* ROM to IMG */
+	pup->iod = NULL;
 	pup->wid = 32;
 	pup->dbf = pup->chk = NULL;
 
@@ -65,8 +66,8 @@ _params_NewUP( void )
 }
 
 
-/* params_ParseArgv  
- * 
+/* params_ParseArgv
+ *
  * parse the arg vector, generating a UserParams structure.
  * Need to free it later.
  */
@@ -93,6 +94,7 @@ params_ParseArgv( UserParams * pup, int argc, char ** argv )
 	    else if (!strcmp( argv[ac], "-key" ))  pup->key = argv[++ac];
 	    else if (!strcmp( argv[ac], "-rom" ))  pup->rom = argv[++ac];
 	    else if (!strcmp( argv[ac], "-trom"))  pup->rom = pup->troms;
+	    else if (!strcmp( argv[ac], "-img" ))  pup->img = argv[++ac];
 
 	    else if (!strcmp( argv[ac], "-ff" ))   pup->ffs = argv[++ac];
 
@@ -112,6 +114,7 @@ params_ParseArgv( UserParams * pup, int argc, char ** argv )
 	    else if (!strcmp( argv[ac], "-rod" ))  pup->rod = argv[++ac];
 
 	    /* ROM to IMG specific*/
+	    else if (!strcmp( argv[ac], "-iod" ))  pup->rod = argv[++ac];
 	    else if (!strcmp( argv[ac], "-dbf" ))  pup->dbf = argv[++ac];
 	    else if (!strcmp( argv[ac], "-chk" ))  pup->chk = argv[++ac];
 	    else if (!strcmp( argv[ac], "-wid" ))  pup->wid = atoi(argv[++ac]);
@@ -128,7 +131,7 @@ params_ParseArgv( UserParams * pup, int argc, char ** argv )
 
 
 /* params_IsDir
- * 
+ *
  *  returns 0 if the passed in path is not a dir or not writable
  */
 int
@@ -162,7 +165,7 @@ params_ParseEnvVars( UserParams * pup )
     if (pup)
     {
 	r = getenv("TDRIVERS");   if (r)  pup->tdrivers = r;
-	r = getenv("TROMS");      if (r)  pup->troms = r; 
+	r = getenv("TROMS");      if (r)  pup->troms = r;
     }
 
     return( pup );
@@ -171,8 +174,8 @@ params_ParseEnvVars( UserParams * pup )
 
 /* params_Parse
  *
- *  checks the environment variables and command line and 
- *  sets the appropriate parameter options as such with 
+ *  checks the environment variables and command line and
+ *  sets the appropriate parameter options as such with
  *  cheese and pickles
  */
 UserParams *
@@ -259,13 +262,13 @@ params_Verify( UserParams * pup )
  */
 void params_Usage( FILE * fp )
 {
-    fprintf( fp, 
+    fprintf( fp,
 	    "    == %s ==\n"
 	    "\t-drv DriverName          %s\n"
 	    "\t-ini AbsoluteDriverPath  %s\n"
-	    "\t-inf (IMG|ROM)           %s\n" 
+	    "\t-inf (IMG|ROM)           %s\n"
 	    "\t-bnk BankNumber          %s\n"
-	    "\t-pal PaletteNumber       %s\n" 
+	    "\t-pal PaletteNumber       %s\n"
 	    "\n",
 		locale_( "COMMON" ),
 		locale_( "Select the driver to use" ),
@@ -298,7 +301,7 @@ void params_Usage( FILE * fp )
 		);
 
 
-    fprintf( fp, 
+    fprintf( fp,
 	    "    == %s ==   (-inf IMG)\n"
 	    "\t-rod OutputDirectory     %s\n"
 	    "\n",
@@ -306,7 +309,7 @@ void params_Usage( FILE * fp )
 		locale_( "Absolute ROM output directory" )
 		);
 
-    fprintf( fp, 
+    fprintf( fp,
 	    "    == %s ==   (-inf ROM)\n"
 	    "\t-dbf BankImageFile       %s\n"
 	    "\t-chk CheckerboardFile    %s\n"
@@ -318,14 +321,14 @@ void params_Usage( FILE * fp )
 		locale_( "How many sprites across" )
 		);
 
-    fprintf( fp, 
+    fprintf( fp,
 	    "    == %s ==\n"
 	    "\t-lang en                 %s\n",
 		locale_( "MISC" ),
 		locale_( "Select locale code" )
 		 );
 #ifdef USE_CURSES
-    fprintf( fp, 
+    fprintf( fp,
 	    "\t-gui                     %s\n",
 		locale_( "Enable Curses-GUI Mode" )
 		 );

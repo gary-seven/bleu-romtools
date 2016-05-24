@@ -777,6 +777,7 @@ void game_Dump( GameDriver * gd )
 /* game_MakePalette
  *
  * generate the palette from the PROM images
+ * TODO: argv to select colors from PROM or INI
  */
 void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
 {
@@ -886,7 +887,7 @@ total_colors =      gdp->npalettes ; // GN: tmp, this is malloc'd per nbr of pal
             int p = pal_order[d];
             int i = c * gdp->gamePalettes[c].ncolors;
             int n =  15 - (color_prom[i + p] & 0x0f) + pal_offset;
-
+#if 1
             gdp->gamePalettes[c].p[d].a = 0;
             if ( d == 0)
             {
@@ -900,6 +901,7 @@ total_colors =      gdp->npalettes ; // GN: tmp, this is malloc'd per nbr of pal
                 gdp->gamePalettes[c].p[d].g = rgb[n].g;
                 gdp->gamePalettes[c].p[d].b = rgb[n].b;
             }
+#endif
         }
     }
 }
