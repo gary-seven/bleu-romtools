@@ -227,6 +227,9 @@ turaco_ConfigureFilenames( TuracoInstance * ti )
 	sprintf( ti->fn_bank,
 		"%s_%d.%s", driver3, ti->up->bnk+1, ti->up->ffs );
 #else
+	if (strlen(ti->up->img) > 0)
+		snprintf(ti->fn_bank, FN_MAX, "%s", ti->up->img ); /*/ GN: use designated image file name if valud */
+	else
 	snprintf( ti->fn_bank, FN_MAX,
 		"%s_%d.%s", driver3, ti->up->bnk+1, ti->up->ffs );
 #endif
