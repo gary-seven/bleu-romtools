@@ -45,7 +45,6 @@ _params_NewUP( void )
 	pup->rod = NULL;
 
 	/* ROM to IMG */
-	pup->iod = NULL;
 	pup->wid = 32;
 	pup->dbf = pup->chk = NULL;
 
@@ -114,7 +113,6 @@ params_ParseArgv( UserParams * pup, int argc, char ** argv )
 	    else if (!strcmp( argv[ac], "-rod" ))  pup->rod = argv[++ac];
 
 	    /* ROM to IMG specific*/
-	    else if (!strcmp( argv[ac], "-iod" ))  pup->rod = argv[++ac];
 	    else if (!strcmp( argv[ac], "-dbf" ))  pup->dbf = argv[++ac];
 	    else if (!strcmp( argv[ac], "-chk" ))  pup->chk = argv[++ac];
 	    else if (!strcmp( argv[ac], "-wid" ))  pup->wid = atoi(argv[++ac]);

@@ -34,7 +34,6 @@ typedef struct {
     char * dbf;	/* bank output IMG filename */
     char * chk;	/* checkerboard filename */
     int    wid;	/* number of sprites wide we're doing */
-    char * iod;	/* image output directory */
 
     /* tilemap */
     char * tms;  /* tilemap set name */

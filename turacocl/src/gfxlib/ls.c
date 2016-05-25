@@ -51,7 +51,7 @@ LS_DetermineFormat(
 )
 {
     FileFormat ff;
-    
+
          if ( (ff = PPM_SupportedFile( filename )) != ff_UNKNOWN) return( ff );
     else if ( (ff = PCX_SupportedFile( filename )) != ff_UNKNOWN) return( ff );
 #ifdef USE_MAGICK
@@ -90,7 +90,7 @@ LS_Load(
     return( NULL );
 }
 
-
+// GN: TODO provide message for failure to open file
 void
 LS_Save(
 	char * filename,
