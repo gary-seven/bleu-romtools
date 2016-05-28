@@ -59,4 +59,28 @@ For each PCX file:
        Append 3-3-2 byte to color_prom.s
        Index = appended_index
    Append index of color onto CLUT entry.  
+
+
+
+The following script will create an individual PCX for each palette.
+After editting a tile in a PCX file, you would need to convert to ROM
+ and then re-run this script to propogate your tile change into all
+the palette images.
+
   
+#!/bin/bash
+
+# there actually needs to be 64 palettes (32 tiles, 32 sprites)
+t=16
+
+[ ! -d images ] && mkdir images
+
+for n in `seq 1 $t`; do
+   TDRIVERS=../turaco-drivers/ ./turacocl  -drv galaganm -inf ROM -bnk 1 -pal $n  -img images
+done
+
+for n in `seq 1 $t`; do
+   TDRIVERS=../turaco-drivers/ ./turacocl  -drv galaganm -inf ROM -bnk 2 -pal $n  -img images
+done
+
+

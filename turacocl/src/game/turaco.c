@@ -231,7 +231,7 @@ turaco_ConfigureFilenames( TuracoInstance * ti )
 	{
         if (strlen(ti->up->img) > 0)
             snprintf( ti->fn_bank, FN_MAX,
-                "%s/%s_%d.%s", ti->up->img, driver3, ti->up->bnk+1, ti->up->ffs );
+                "%s/%s_%d_%d.%s", ti->up->img, driver3, ti->up->bnk+1, ti->up->pal, ti->up->ffs);
     }
 	else
         snprintf( ti->fn_bank, FN_MAX,
