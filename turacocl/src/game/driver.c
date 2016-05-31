@@ -775,17 +775,32 @@ void game_Dump( GameDriver * gd )
 #define MAXPALETTE 256
 
 /* game_MakePalette
+ * In order to represent palette/CLUT for each bank in INI file, there would
+ * need to be 64 [palette] emtries, and e.g. bank2 (sprite) would need to be
+ * generated with '-pal 33' to offset CLUT selection appropriately.
+ *
+ * Here I intend to use 'bank' to calculate offset into CLUT image, so for e.g.
+ * generation of bank2 palette 1, '-pal 1' would be used.
  *
  * generate the palette from the PROM images
  * TODO: argv to select colors from PROM or INI
+ *
+ * The palette entries in the INI file are temporarily used as a placeholder
+ * to allocate the corresponding amount of space in gdp->gamePalettes.
+ * Since I am passing in 'bank', I can offset into the color LUT data.
+ *
  */
 void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
 {
     int c, d, i;
 
+    /*
+      Character tile RGBs are in lower half, sprites colors map to upper half of
+      palette ...  who knows what other games are like.
+    */
     int pal_bank_sz = 32 / 2; // each bank has own set of colors TODO: parameter
-    int pal_offset = bank * pal_bank_sz; /* sprites colors map to upper half of palette
-                                          who knows what other games are like */
+    int pal_offset = bank * pal_bank_sz;
+
     int bitplanes = 2; // TODO: parameter
     int color_prom_sz = 32;  // TODO: need size of color prom parameter here
     int total_colors = 32; // 128/(bitplanes<<1)   TODO: parameter
@@ -793,7 +808,8 @@ void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
     PIXEL     rgb[MAXPALETTE];
 
     /* lifted this decoder logic from MAME
-        TODO: parameters for resistor values ?  */
+        TODO: parameters for resistor values  (note there is no correspondence
+        this to turaco's INI file handling ;)   */
     for (i = 0; i < color_prom_sz; i++)
     {
         int bit0,bit1,bit2;
