@@ -536,8 +536,23 @@ PCX_Load(
     printf("Image palette:\n");
     for (c = 0; c < 16; c++) // this game only has 4 colors, for the 2 bit-planes
     {
-      // each rgb triplet needs to be packed into the format of the color PROM
-      printf(".db %d,%d,%d, ; %d\n", pi.pal[c].r, pi.pal[c].g, pi.pal[c].b, c);
+        // each rgb triplet needs to be packed into the format of the color PROM
+        unsigned char cc, n;
+        // 0x21 + 0x47 + 0x97 == 0xFF
+        cc = 0;
+        n = pi.pal[c].b;
+        cc <<= 1; if (n >= 0x97) { n -= 0x97; cc |= 1; }
+        cc <<= 1; if (n >= 0x47) { n -= 0x47; cc |= 1; }
+        n = pi.pal[c].g;
+        cc <<= 1; if (n >= 0x97) { n -= 0x97; cc |= 1; }
+        cc <<= 1; if (n >= 0x47) { n -= 0x47; cc |= 1; }
+        cc <<= 1; if (n >= 0x21) { n -= 0x21; cc |= 1; }
+        n = pi.pal[c].r;
+        cc <<= 1; if (n >= 0x97) { n -= 0x97; cc |= 1; }
+        cc <<= 1; if (n >= 0x47) { n -= 0x47; cc |= 1; }
+        cc <<= 1; if (n >= 0x21) { n -= 0x21; cc |= 1; }
+
+        printf(".db %02X,%02X,%02X ; %02X [%02X]\n", pi.pal[c].r, pi.pal[c].g, pi.pal[c].b, c, cc);
     }
     return( i );
 }
