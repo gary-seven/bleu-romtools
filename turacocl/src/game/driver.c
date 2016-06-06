@@ -808,6 +808,7 @@ void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
     PIXEL     rgb[MAXPALETTE];
 
     /* lifted this decoder logic from MAME
+        0x21 + 0x47 + 0x97 == 0xFF
         TODO: parameters for resistor values  (note there is no correspondence
         this to turaco's INI file handling ;)   */
     for (i = 0; i < color_prom_sz; i++)
@@ -827,7 +828,7 @@ void games_MakePalette(GameDriver * gdp, unsigned char *color_prom, int bank)
         bit1 = (color_prom[31-i] >> 6) & 0x01;
         bit2 = (color_prom[31-i] >> 7) & 0x01;
         rgb[i].b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-#if 0
+#if 1
         printf(".db 0x%02X, 0x%02X, 0x%02X ; (0x%02X) %X\n",
                     rgb[i].r, rgb[i].g, rgb[i].b, color_prom[31-i], i);
 #endif

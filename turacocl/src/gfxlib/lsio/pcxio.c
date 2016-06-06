@@ -533,8 +533,9 @@ PCX_Load(
 
     // GN:
     int c;
-    printf("Image palette:\n");
-    for (c = 0; c < 16; c++) // this game only has 4 colors, for the 2 bit-planes
+    unsigned char asdf[4];
+    printf("= Image palette =\n");
+    for (c = 0; c < 4; c++) // this game only has 4 colors, for the 2 bit-planes
     {
         // each rgb triplet needs to be packed into the format of the color PROM
         unsigned char cc, n;
@@ -551,9 +552,12 @@ PCX_Load(
         cc <<= 1; if (n >= 0x97) { n -= 0x97; cc |= 1; }
         cc <<= 1; if (n >= 0x47) { n -= 0x47; cc |= 1; }
         cc <<= 1; if (n >= 0x21) { n -= 0x21; cc |= 1; }
-
+        asdf[c] = cc;
         printf(".db %02X,%02X,%02X ; %02X [%02X]\n", pi.pal[c].r, pi.pal[c].g, pi.pal[c].b, c, cc);
     }
+    // [2] & [1] must be swapped from the game's perspective
+    printf("## 0x%02X\n## 0x%02X\n## 0x%02X\n## 0x%02X\n",
+      asdf[0], asdf[2], asdf[1], asdf[3]);
     return( i );
 }
 
