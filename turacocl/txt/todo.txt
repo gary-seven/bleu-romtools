@@ -102,7 +102,11 @@ cat colors2.dmp | sort -u  | sed 's/^/.db /' > colors2.s
 
 [ -f "clut2.s" ] && rm clut2.s 
 
+# index needs to be adjusted for 0-base !
 while read C
 do
-  grep -n $C colors2.s | sed 's/:.*$//' | xargs   printf '.db 0x%02X\n'  >> clut2.s
+#  grep -n $C colors2.s | sed 's/:.*$//' |  xargs   printf ".db 0x%02X  ; $C \n"  >> clut2.s
+ let N=`grep -n $C colors2.s | sed 's/:.*$//'`-1 
+ echo $N | xargs   printf ".db 0x%02X  ; $C \n"  >> clut2.s
 done < colors2.dmp
+
