@@ -68,37 +68,44 @@ After editting a tile in a PCX file, you would need to convert to ROM
 the palette images.
 
 
+
 #!/bin/bash
 
-#
-# sudo pip install Pillow
-#
-#
 
 # there actually needs to be 64 palettes (32 tiles, 32 sprites)
 t=32
 
-[ -f "colors2.dmp" ] && rm colors1.dmp 
-
 [ ! -d images ] && mkdir images
+
+
+[ -f "colors1.dmp" ] && rm colors1.dmp 
+echo ".area CSEG00" > colors1.s
 
 for n in `seq 1 $t`; do
    TDRIVERS=../turaco-drivers/ ./turacocl  -drv galaganm -inf IMG -bnk 1 -pal $n  -img images \
            |  sed -n '/^##/p'  | sed 's/^##//' >> colors1.dmp
 done
 
-cat colors1.dmp | sort -u > colors1.srt
+cat colors1.dmp | sort -u | sed 's/^/.db /' >> colors1.s
+
+
+
+
+[ -f "colors1.dmp" ] && rm colors1.dmp 
+
 
 
 
 [ -f "colors2.dmp" ] && rm colors2.dmp 
+echo ".area CSEG01" > colors2.s
 
 for n in `seq 1 $t`; do
    TDRIVERS=../turaco-drivers/ ./turacocl  -drv galaganm -inf IMG -bnk 2 -pal $n  -img images \
         |  sed -n '/^##/p'  | sed 's/^##//' >> colors2.dmp
 done
 
-cat colors2.dmp | sort -u  | sed 's/^/.db /' > colors2.s
+cat colors2.dmp | sort -u  | sed 's/^/.db /' >> colors2.s
+
 
 [ -f "clut2.s" ] && rm clut2.s 
 
@@ -110,3 +117,9 @@ do
  echo $N | xargs   printf ".db 0x%02X  ; $C \n"  >> clut2.s
 done < colors2.dmp
 
+[ -f "colors2.dmp" ] && rm colors2.dmp 
+
+
+#
+# /usr/local/bin/asez80 -l -p -a -o colors2.s
+#
