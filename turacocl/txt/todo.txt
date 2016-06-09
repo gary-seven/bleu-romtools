@@ -121,5 +121,9 @@ done < colors2.dmp
 
 
 #
-# /usr/local/bin/asez80 -l -p -a -o colors2.s
+# asez80  -a -o colors1.s
+# asez80  -a -o colors2.s
+# aslink  -i -m -w -b CSEG00=0x0000 -b CSEG01=0x0010  5n   colors1.rel   colors2.rel 
+# hmmm ... nice but I believe the resulting palette will be backwards ;(
+# srec_cat  5n.i86 -intel -fill 0xff 0x0 32 -offset -0x0000 -o _5n.bin -Binary
 #
