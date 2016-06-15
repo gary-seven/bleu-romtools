@@ -97,14 +97,22 @@ cat colors1.dmp | sort -u | sed 's/^/.db /' >> colors1.s
 
 
 [ -f "colors2.dmp" ] && rm colors2.dmp 
-echo ".area CSEG01" > colors2.s
 
 for n in `seq 1 $t`; do
    TDRIVERS=../turaco-drivers/ ./turacocl  -drv galaganm -inf IMG -bnk 2 -pal $n  -img images \
-        |  sed -n '/^##/p'  | sed 's/^##//' >> colors2.dmp
+        |  sed -n '/^##/p'  | sed 's/^##//'  >> colors2.dmp
 done
 
-cat colors2.dmp | sort -u  | sed 's/^/.db /' >> colors2.s
+[ -f "colors2.tmp" ] && rm colors2.tmp 
+
+for n in `seq 1 16`; do echo ".db 0x00" >> colors2.tmp; done  # max amount of padding 
+cat colors2.dmp | sort -u  | sed 's/^/.db /' >> colors2.tmp
+# echo "0x00, 0x00, 0xC0, 0xC5 ...  >> colors2.tmp   ... make a test file
+cat colors2.tmp |  sort -r   | head -n16 > colors2.s  # reverse and crop     (HELP sort -r ??? )
+#[ -f "colors2.tmp" ] && rm colors2.tmp 
+
+# make a test file
+#echo "0xF6,0x07,0x3F,0x27,0x00,0xC7,0xF8,0xE8,0x00,0x38,0x00,0xD8,0xC5,0xC0,0x00,0x00," | sed 's/0x/.db /g' | sed 's/,/\n/g'  > colors2.s
 
 
 [ -f "clut2.s" ] && rm clut2.s 
@@ -113,11 +121,13 @@ cat colors2.dmp | sort -u  | sed 's/^/.db /' >> colors2.s
 while read C
 do
 #  grep -n $C colors2.s | sed 's/:.*$//' |  xargs   printf ".db 0x%02X  ; $C \n"  >> clut2.s
- let N=`grep -n $C colors2.s | sed 's/:.*$//'`-1 
+ let N=`grep -n $C colors2.s  | sed 's/:.*$//'`-1 
  echo $N | xargs   printf ".db 0x%02X  ; $C \n"  >> clut2.s
 done < colors2.dmp
 
-[ -f "colors2.dmp" ] && rm colors2.dmp 
+# [ -f "colors2.dmp" ] && rm colors2.dmp 
+
+# insert into asm file #    echo ".area CSEG01" > colors2.s
 
 
 #
